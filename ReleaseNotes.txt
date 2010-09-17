@@ -1,0 +1,11 @@
+This library provides UTF-7 and Modified UTF-7 Charsets for Java.
+
+Sun Java 6 or better is required.
+
+This version is based on http://sourceforge.net/projects/jutf7/files/jutf7/1.0.0/
+with the following minor modifications:
+- removed hacks for flush bug in JDK < 1.6
+- minor code formatting (coding conventions)
+- adaption to JUnit 4
+- pure Ant build instead of maven
+- provide version infos
