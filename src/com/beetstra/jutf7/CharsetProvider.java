@@ -44,14 +44,15 @@ public class CharsetProvider
 	private static final String UTF7_M_NAME = "X-MODIFIED-UTF-7";
 	
 	private static final String[] UTF7_ALIASES = new String[] {
-		"UNICODE-1-1-UTF-7", "CSUNICODE11UTF7", "X-RFC2152", "X-RFC-2152" 
+		"UNICODE-1-1-UTF-7", "CSUNICODE11UTF7", "X-RFC2152", "X-RFC-2152" , "UTF7"
 	};
 	private static final String[] UTF7_O_ALIASES = new String[] {
 		"X-RFC2152-OPTIONAL", "X-RFC-2152-OPTIONAL" 
 	};
 	private static final String[] UTF7_M_ALIASES = new String[] {
 		"X-IMAP-MODIFIED-UTF-7", "X-IMAP4-MODIFIED-UTF7",
-		"X-IMAP4-MODIFIED-UTF-7", "X-RFC3501", "X-RFC-3501" 
+		"X-IMAP4-MODIFIED-UTF-7", "X-RFC3501", "X-RFC-3501" , 
+		"IMAP-UTF-7", "IMAP-UTF7"
 	};
 
 	private Charset utf7charset = 

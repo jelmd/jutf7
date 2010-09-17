@@ -36,6 +36,8 @@ import java.nio.charset.CoderResult;
 
 import org.junit.Test;
 
+import com.zimbra.cs.mime.charset.ImapUTF7;
+
 /**
  * @author 	Firstname Lastname
  * @version	$Revision$
@@ -43,11 +45,14 @@ import org.junit.Test;
 public class ModifiedUTF7Test
 	extends CharsetTest
 {
+	private Charset imapUTF7;
+	
 	/**
 	 * 
 	 */
 	public ModifiedUTF7Test() {
 		super(new ModifiedUTF7Charset("X-MODIFIED-UTF-7", new String[] { }));
+		imapUTF7 = new ImapUTF7("imap-utf-7", new String[] { });
 	}
 
 	/**
@@ -78,14 +83,18 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testDecodeSimple() throws Exception {
-		assertEquals("abcdefghijklmnopqrstuvwxyz",
-			decode("abcdefghijklmnopqrstuvwxyz"));
+		String encoded = "abcdefghijklmnopqrstuvwxyz";
+		assertEquals(encoded, decode(encoded));
+		assertEquals(encoded, imap7decode(encoded));
 		String directly = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'(),-./:?\r\n";
 		assertEquals(directly, decode(directly));
+		assertEquals(directly, imap7decode(directly));
 		String optional = "!\"#$%*;<=>@[]^_'{|}";
 		assertEquals(optional, decode(optional));
+		assertEquals(optional, imap7decode(optional));
 		String nonUTF7 = "+\\~";
 		assertEquals(nonUTF7, decode(nonUTF7));
+		assertEquals(nonUTF7, imap7decode(nonUTF7));
 	}
 
 	/**
@@ -93,7 +102,10 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testDecodeComplex() throws Exception {
-		assertEquals("A\u2262\u0391.", decode("A&ImIDkQ-."));
+		String encoded = "A&ImIDkQ-.";
+		String decoded = "A\u2262\u0391.";
+		assertEquals(decoded, decode(encoded));
+		assertEquals(decoded, imap7decode(encoded));
 	}
 
 	private static String EOL = System.getProperty("line.separator");
@@ -121,20 +133,32 @@ public class ModifiedUTF7Test
 		return buf.toString();
 	}
 
-	private static String toHex(String a, String b) {
-		return toBytes(a, false) + EOL + "<br/>"+ toBytes(b, false) + EOL; 
+	private static String toHex(String... a) {
+		StringBuilder buf = new StringBuilder(EOL);
+		for (String s : a) {
+			buf.append(toBytes(s, false)).append("  ").append(EOL); 
+		}
+		return buf.toString();
 	}
 
+	private String imap7decode(String s) throws UnsupportedEncodingException {
+		return imapUTF7.decode(CharsetTestUtil.wrap(s)).toString();
+	}
+	
 	/**
 	 * @throws Exception
 	 */
 	@Test
 	public void testDecodeLong() throws Exception {
-		String a = new String(new char[] { 
-			0x80, 0xe1, 0xe9, 0xfa, 0xed, 0xf3, 0xfd, 0xe4, 0xeb, 0xef,
+		String decoded = new String(new char[] { 
+			0x20ac, 0xe1, 0xe9, 0xfa, 0xed, 0xf3, 0xfd, 0xe4, 0xeb, 0xef,
 			0xf6, 0xfc, 0xff });
-		String b = decode("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-");
-		assertEquals(toHex(a, b), a, b);
+		String encoded = "&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-";
+		String b = decode(encoded);
+		String c = imap7decode(encoded);
+		String msg = toHex(decoded, b, c);
+		assertEquals(msg, decoded, b);
+		assertEquals(msg, decoded, c);
 	}
 
 	/**
@@ -142,12 +166,14 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testDecodeLimitedOutput() throws Exception {
+		String encoded = "A&ImIDkQ-.";
+		String decoded = "A\u2262\u0391.";
 		CharsetDecoder decoder = tested.newDecoder();
-		ByteBuffer in = CharsetTestUtil.wrap("A&ImIDkQ-.");
+		ByteBuffer in = CharsetTestUtil.wrap(encoded);
 		CharBuffer out = CharBuffer.allocate(4);
 		assertEquals(CoderResult.UNDERFLOW, decoder.decode(in, out, true));
 		out.flip();
-		assertEquals("A\u2262\u0391.", out.toString());
+		assertEquals(decoded, out.toString());
 	}
 
 	/**
@@ -155,7 +181,13 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testDecodePerfectSized() throws Exception {
-		assertEquals(new String(new char[] { 0x80 , 0xe1, 0xe9 }), decode("&IKwA4QDp-"));
+		String decoded = new String(new char[] { 0x20ac , 0xe1, 0xe9 });
+		String encoded = "&IKwA4QDp-";
+		String a = decode(encoded);
+		String b = imap7decode(encoded);
+		String msg = toHex(decoded, a, b);
+		assertEquals(msg, decoded, a);
+		assertEquals(msg, decoded, b);
 	}
 
 	/**
@@ -164,8 +196,11 @@ public class ModifiedUTF7Test
 	@Test
 	public void testDecodeShiftSequence() throws Exception {
 		assertEquals("&", decode("&-"));
+		assertEquals("&", imap7decode("&-"));
 		assertEquals("&-", decode("&--"));
+		assertEquals("&-", imap7decode("&--"));
 		assertEquals("&&", decode("&-&-"));
+		assertEquals("&&", imap7decode("&-&-"));
 	}
 
 	/**
@@ -199,7 +234,7 @@ public class ModifiedUTF7Test
 	@Test
 	public void testDecodeInvalidLength() throws Exception {
 		assertMalformed("&a-", "");
-		assertMalformed("ab&IKwD-", "ab€");
+		assertMalformed("ab&IKwD-", new String(new char[] { 0x61, 0x62, 0x20ac}));
 	}
 
 	/**
@@ -209,6 +244,7 @@ public class ModifiedUTF7Test
 	public void testDecodeUnshiftShiftSequence() throws Exception {
 		assertMalformed("&ImIDkQ-&ImIDkQ-", "\u2262\u0391");
 		assertEquals("\u2262\u0391a\u2262\u0391", decode("&ImIDkQ-a&ImIDkQ-"));
+		assertEquals("\u2262\u0391a\u2262\u0391", imap7decode("&ImIDkQ-a&ImIDkQ-"));
 	}
 
 	/**
@@ -225,11 +261,13 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testLongBadDecode() throws Exception {
-		assertMalformed("&IKwA4QDpA-", "€αι");
-		assertMalformed("&IKwA4QDpA", "€αι");
-		assertMalformed("&IKwA4QDp", "€αι");
-		assertMalformed("&IKwA4QDpAP", "€αι");
-		assertMalformed("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP-", "€αιϊνσύδλοφό");
+		String decoded = new String(new char[] { 0x20ac, 0xe1, 0xe9 });
+		assertMalformed("&IKwA4QDpA-", decoded);
+		assertMalformed("&IKwA4QDpA", decoded);
+		assertMalformed("&IKwA4QDp", decoded);
+		assertMalformed("&IKwA4QDpAP", decoded);
+		assertMalformed("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP-", 
+			new String(new char[] { 0x20ac, 0xe1, 0xe9, 0xfa, 0xed, 0xf3, 0xfd, 0xe4, 0xeb, 0xef, 0xf6, 0xfc}));
 	}
 
 	/**
@@ -238,6 +276,7 @@ public class ModifiedUTF7Test
 	@Test
 	public void testEncodeSimple() throws Exception {
 		String directly = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'(),-./:?";
+		assertEquals(directly, encode(directly));
 		assertEquals(directly, encode(directly));
 		String optional = "!\"#$%*;<=>@[]^_'{|}";
 		assertEquals(optional, encode(optional));
@@ -297,21 +336,31 @@ public class ModifiedUTF7Test
 	}
 
 	/**
-	 * @param s
-	 * @param stringOut
+	 * @param encoded
+	 * @param decoded
 	 * @throws UnsupportedEncodingException
 	 */
-	protected void assertMalformed(String s, String stringOut)
+	protected void assertMalformed(String encoded, String decoded)
 		throws UnsupportedEncodingException
 	{
-		ByteBuffer in = CharsetTestUtil.wrap(s);
-		CharsetDecoder testedDecoder = tested.newDecoder();
-		CharBuffer out = CharBuffer.allocate(1024);
-		CoderResult result = testedDecoder.decode(in, out, true);
-		if (result.isUnderflow())
-			result = testedDecoder.flush(out);
-		out.flip();
-		assertEquals(stringOut, out.toString());
-		assertTrue(result.isMalformed());
+		CharsetDecoder[] decoder = new CharsetDecoder[] {
+			imapUTF7.newDecoder(), tested.newDecoder() 
+		};
+		for (int i=decoder.length-1; i >= 0; i--) {
+			ByteBuffer in = CharsetTestUtil.wrap(encoded);
+			CharBuffer out = CharBuffer.allocate(1024);
+			CoderResult result = decoder[i].decode(in, out, true);
+			if (result.isUnderflow()) {
+				result = decoder[i].flush(out);
+			}
+			out.flip();
+			String a = out.toString();
+			String msg = decoder[i].getClass().getName() + ": "
+				+ toHex(decoded, a);
+			assertEquals(msg, decoded, a);
+			assertTrue(decoder[i].getClass().getName() 
+				+ ": result not maleformed for " + encoded, 
+				result.isMalformed());
+		}
 	}
 }

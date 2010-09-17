@@ -35,6 +35,12 @@ abstract class CharsetTestUtil {
 		out.clear();
 	}
 
+	/**
+	 * Wrap the given ByteBuffer into a String using US-ASCII
+	 * @param buffer
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	static String asString(ByteBuffer buffer)
 		throws UnsupportedEncodingException
 	{
@@ -43,6 +49,13 @@ abstract class CharsetTestUtil {
 		return new String(bytes, "US-ASCII");
 	}
 
+	/**
+	 * Wrap the given string into a byte buffer.
+	 * 
+	 * @param string
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	static ByteBuffer wrap(String string) throws UnsupportedEncodingException {
 		byte[] bytes = string.getBytes("US-ASCII");
 		return ByteBuffer.wrap(bytes);

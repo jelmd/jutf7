@@ -342,7 +342,7 @@
 			<batchtest fork="yes" todir="${build.dir}/reports">
 				<fileset dir="${test.dir}">
 					<include name="${codebase}/**/${tests}"/>
-					<exclude name="**/AllTests.java,**/ToggleTest.java"/>
+					<exclude name="**/AllTests.java,**/CharsetTest.java"/>
 				</fileset>
 			</batchtest>
 		</junit>

@@ -54,6 +54,8 @@ public class CharsetProviderTest {
 		assertEquals(charset, tested.charsetForName("x-imap4-modified-utf-7"));
 		assertEquals(charset, tested.charsetForName("x-RFC3501"));
 		assertEquals(charset, tested.charsetForName("x-RFC-3501"));
+		assertEquals(charset, tested.charsetForName("imap-utf-7"));
+		assertEquals(charset, tested.charsetForName("imap-utf7"));
 	}
 
 	/**
@@ -65,6 +67,7 @@ public class CharsetProviderTest {
 		assertNotNull("charset not found", charset);
 		assertEquals(UTF7Charset.class, charset.getClass());
 		assertEquals(charset, tested.charsetForName("utf-7"));
+		assertEquals(charset, tested.charsetForName("utf7"));
 		assertEquals(charset, tested.charsetForName("UNICODE-1-1-UTF-7"));
 		assertEquals(charset, tested.charsetForName("csUnicode11UTF7"));
 		assertEquals(charset, tested.charsetForName("x-RFC2152"));
