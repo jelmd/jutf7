@@ -108,43 +108,14 @@ public class ModifiedUTF7Test
 		assertEquals(decoded, imap7decode(encoded));
 	}
 
-	private static String EOL = System.getProperty("line.separator");
-	private static String toBytes(String s, boolean linefeed) {
-		int count = 0;
-		char[] x = s.toCharArray();
-		StringBuilder buf = new StringBuilder();
-		for (int i=0; i < x.length; i++) {
-			count++;
-			if (linefeed && count == 8) {
-				buf.append(EOL);
-				count = 0;
-			}
-			if (x[i] < 0x1000) {
-				buf.append('0');
-			}
-			if (x[i] < 0x100) {
-				buf.append('0');
-			}
-			if (x[i] < 0x10) {
-				buf.append('0');
-			}
-			buf.append(Integer.toHexString(x[i])).append(' ');
-		}
-		return buf.toString();
-	}
-
-	private static String toHex(String... a) {
-		StringBuilder buf = new StringBuilder(EOL);
-		for (String s : a) {
-			buf.append(toBytes(s, false)).append("  ").append(EOL); 
-		}
-		return buf.toString();
-	}
-
 	private String imap7decode(String s) throws UnsupportedEncodingException {
 		return imapUTF7.decode(CharsetTestUtil.wrap(s)).toString();
 	}
-	
+
+	private String imap7encode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(imapUTF7.encode(decoded));
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -156,7 +127,7 @@ public class ModifiedUTF7Test
 		String encoded = "&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-";
 		String b = decode(encoded);
 		String c = imap7decode(encoded);
-		String msg = toHex(decoded, b, c);
+		String msg = CharsetTestUtil.toHex(decoded, b, c);
 		assertEquals(msg, decoded, b);
 		assertEquals(msg, decoded, c);
 	}
@@ -185,7 +156,7 @@ public class ModifiedUTF7Test
 		String encoded = "&IKwA4QDp-";
 		String a = decode(encoded);
 		String b = imap7decode(encoded);
-		String msg = toHex(decoded, a, b);
+		String msg = CharsetTestUtil.toHex(decoded, a, b);
 		assertEquals(msg, decoded, a);
 		assertEquals(msg, decoded, b);
 	}
@@ -277,11 +248,13 @@ public class ModifiedUTF7Test
 	public void testEncodeSimple() throws Exception {
 		String directly = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'(),-./:?";
 		assertEquals(directly, encode(directly));
-		assertEquals(directly, encode(directly));
+		assertEquals(directly, imap7encode(directly));
 		String optional = "!\"#$%*;<=>@[]^_'{|}";
 		assertEquals(optional, encode(optional));
+		assertEquals(optional, imap7encode(optional));
 		String nonUTF7 = "+\\~";
 		assertEquals(nonUTF7, encode(nonUTF7));
+		assertEquals(nonUTF7, imap7encode(nonUTF7));
 	}
 
 	/**
@@ -290,7 +263,10 @@ public class ModifiedUTF7Test
 	@Test
 	public void testEncodeComplex() throws Exception {
 		assertEquals("A&ImIDkQ-.", encode("A\u2262\u0391."));
-		assertEquals("&AO0A4Q-", encode("íá"));
+		assertEquals("A&ImIDkQ-.", imap7encode("A\u2262\u0391."));
+		String decoded = new String(new char[] { 0xed, 0xe1 });
+		assertEquals("&AO0A4Q-", encode(decoded));
+		assertEquals("&AO0A4Q-", imap7encode(decoded));
 	}
 
 	/**
@@ -298,17 +274,29 @@ public class ModifiedUTF7Test
 	 */
 	@Test
 	public void testEncodeLong() throws Exception {
-		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-",
-			encode("€áéúíóýäëïöüÿ"));
+		String decoded = new String(new char[] { 0x20ac, 0xe1, 0xe9, 0xfa, 0xed,
+			0xf3, 0xfd, 0xe4, 0xeb, 0xef, 0xf6, 0xfc, 0xff });
+		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", encode(decoded));
+		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", imap7encode(decoded));
 	}
+
+	private static final String EOL = System.getProperty("line.separator");
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
 	public void testEncodeAlphabet() throws Exception {
-		assertEquals("&AL4AvgC+-", encode("¾¾¾"));
-		assertEquals("&AL8AvwC,-", encode("¿¿¿"));
+		String decoded = new String(new char[] { 0xbe, 0xbe, 0xbe });
+		String encoded = encode(decoded);
+		String msg = EOL + decoded + EOL + encoded + EOL;
+		assertEquals(msg, "&AL4AvgC+-", encoded);
+		assertEquals(msg, "&AL4AvgC+-", imap7encode(decoded));
+		decoded = new String(new char[] { 0xbf, 0xbf, 0xbf });
+		encoded = encode(decoded);
+		msg = EOL + decoded + EOL + encoded + EOL;
+		assertEquals(msg, "&AL8AvwC,-", encoded);
+		assertEquals(msg, "&AL8AvwC,-", imap7encode(decoded));
 	}
 
 	/**
@@ -319,7 +307,7 @@ public class ModifiedUTF7Test
 		// simulate what is done in String.getBytes
 		// (cannot be used directly since Charset is not installed while
 		// testing)
-		String string = "café";
+		String string = new String(new char[] { 'c', 'a', 'f', 0xe9 });
 		CharsetEncoder encoder = tested.newEncoder();
 		ByteBuffer bb = ByteBuffer
 			.allocate((int) (encoder.maxBytesPerChar() * string.length()));
@@ -333,6 +321,7 @@ public class ModifiedUTF7Test
 			cr.throwException();
 		bb.flip();
 		assertEquals("caf&AOk-", CharsetTestUtil.asString(bb));
+		assertEquals("caf&AOk-", imap7encode(string));
 	}
 
 	/**
@@ -344,9 +333,9 @@ public class ModifiedUTF7Test
 		throws UnsupportedEncodingException
 	{
 		CharsetDecoder[] decoder = new CharsetDecoder[] {
-			imapUTF7.newDecoder(), tested.newDecoder() 
+			tested.newDecoder(), imapUTF7.newDecoder()  
 		};
-		for (int i=decoder.length-1; i >= 0; i--) {
+		for (int i=0; i < decoder.length; i++) {
 			ByteBuffer in = CharsetTestUtil.wrap(encoded);
 			CharBuffer out = CharBuffer.allocate(1024);
 			CoderResult result = decoder[i].decode(in, out, true);
@@ -356,11 +345,19 @@ public class ModifiedUTF7Test
 			out.flip();
 			String a = out.toString();
 			String msg = decoder[i].getClass().getName() + ": "
-				+ toHex(decoded, a);
-			assertEquals(msg, decoded, a);
-			assertTrue(decoder[i].getClass().getName() 
-				+ ": result not maleformed for " + encoded, 
-				result.isMalformed());
+				+ CharsetTestUtil.toHex(decoded, a);
+			if (i == 0) {
+				assertEquals(msg, decoded, a);
+				assertTrue(decoder[i].getClass().getName() 
+					+ ": result not maleformed for " + encoded, 
+					result.isMalformed());
+			} else if (!decoded.equals(a)) {
+				System.err.println("decoded value for " + encoded 
+					+ " unexpected (expected/got) by " + msg);
+			} else if (!result.isMalformed()) {
+				System.err.println(decoder[i].getClass().getName() 
+					+ ": result not maleformed for " + encoded);
+			}
 		}
 	}
 }

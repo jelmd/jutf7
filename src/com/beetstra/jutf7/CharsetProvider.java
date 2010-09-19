@@ -120,7 +120,8 @@ public class CharsetProvider
 		System.out.println();
 		System.out.println("Usage: java -jar jutf7.jar [encode|decode] <text>");
 		System.out.println();
-		System.out.println("Example: java -jar jutf7.jar encode caf�");
+		System.out.println("Example: java -jar jutf7.jar encode caf" 
+			+ (char) 0xEF + (char) 0xBF + (char) 0xBD);
 		System.out.println("Result: caf+AOk-");
 	}
 }

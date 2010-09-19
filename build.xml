@@ -282,7 +282,7 @@
 	##########################################################################
 	-->
 	<target name="clean">
-		<delete dir="${build.dir}" followsymlinks="false" />
+		<delete dir="${build.dir}" />
 		<delete quiet="true" dir="${dist.dir}"/>
 	</target>
 	<target name="clean.test" description="--> clean up test reports, only">

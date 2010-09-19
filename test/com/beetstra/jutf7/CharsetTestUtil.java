@@ -60,4 +60,38 @@ abstract class CharsetTestUtil {
 		byte[] bytes = string.getBytes("US-ASCII");
 		return ByteBuffer.wrap(bytes);
 	}
+	
+	public static final String EOL = System.getProperty("line.separator");
+	public static final String toBytes(String s, boolean linefeed) {
+		int count = 0;
+		char[] x = s.toCharArray();
+		StringBuilder buf = new StringBuilder();
+		for (int i=0; i < x.length; i++) {
+			count++;
+			if (linefeed && count == 8) {
+				buf.append(EOL);
+				count = 0;
+			}
+			if (x[i] < 0x1000) {
+				buf.append('0');
+			}
+			if (x[i] < 0x100) {
+				buf.append('0');
+			}
+			if (x[i] < 0x10) {
+				buf.append('0');
+			}
+			buf.append(Integer.toHexString(x[i])).append(' ');
+		}
+		return buf.toString();
+	}
+
+	public static final String toHex(String... a) {
+		StringBuilder buf = new StringBuilder(EOL);
+		for (String s : a) {
+			buf.append(toBytes(s, false)).append("  ").append(EOL); 
+		}
+		return buf.toString();
+	}
+
 }

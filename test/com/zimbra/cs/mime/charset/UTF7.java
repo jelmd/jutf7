@@ -72,7 +72,8 @@ public class UTF7 extends Charset {
 		@Override
 		protected CoderResult implFlush(CharBuffer out) {
 			if (shifted && decoder != 0)
-				return CoderResult.malformedForLength(0);
+				// modified by jel: original used invalid length 0
+				return CoderResult.malformedForLength(1);
 			return CoderResult.UNDERFLOW;
 		}
 
@@ -86,7 +87,8 @@ public class UTF7 extends Charset {
 					return CoderResult.OVERFLOW;
 				byte c = in.get();
 				if (c > MAX_UTF7_CHAR_VALUE)
-					return CoderResult.malformedForLength(0);
+					// modified by jel: original used invalid length 0
+					return CoderResult.malformedForLength(1);
 				if (shifted) {
 					byte decodedChar = INVERSE_BASE_64[c];
 					if (decodedChar == NON_BASE_64) {
@@ -201,7 +203,11 @@ public class UTF7 extends Charset {
 		}
 	}
 
-	UTF7(String canonicalName, String[] aliases) {
+	/**
+	 * @param canonicalName
+	 * @param aliases
+	 */
+	public UTF7(String canonicalName, String[] aliases) {
 		super(canonicalName, aliases);
 		BEGIN_SHIFT = '+';
 		END_SHIFT = '-';

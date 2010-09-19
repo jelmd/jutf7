@@ -1,0 +1,484 @@
+
+  PCI-Express
+
+aus Wikipedia, der freien Enzyklopädie
+(Weitergeleitet von PCIe </w/index.php?title=PCIe&redirect=no>)
+Dies ist eine gesichtete Version dieser Seite(+)
+Dies ist die gesichtete Version
+</wiki/Hilfe:Gesichtete_und_gepr%C3%BCfte_Versionen>, die am /31. Juli
+2010/ markiert
+<http://de.wikipedia.org/w/index.php?title=Spezial:Logbuch&type=review&page=PCI-Express>
+wurde. Es gibt 1 ausstehende Änderung
+<http://de.wikipedia.org/w/index.php?title=PCI-Express&oldid=77278856&diff=cur&diffonly=0>,
+die noch gesichtet werden muss.
+Wechseln zu: Navigation <#mw-head>, Suche <#p-search>
+</w/index.php?title=Datei:PCI_Express.svg&filetimestamp=20100815141855>
+</w/index.php?title=Datei:PCI_Express.svg&filetimestamp=20100815141855>
+PCI-Express-Logo
+
+*PCI-Express* („Peripheral Component Interconnect Express“, abgekürzt:
+*PCIe* oder PCI-E) ist ein Erweiterungsstandard zur Verbindung von
+Peripheriegeräten </wiki/Peripherieger%C3%A4t> mit dem Chipsatz
+</wiki/Chipsatz> eines Hauptprozessors </wiki/Hauptprozessor>. PCIe ist
+der Nachfolger von PCI </wiki/Peripheral_Component_Interconnect>, PCI-X
+und AGP </wiki/Accelerated_Graphics_Port> und bietet im Vergleich zu
+seinen Vorgängern eine höhere Datenübertragungsrate
+</wiki/Daten%C3%BCbertragungsrate>.
+
+Während ihrer Entwicklung wurde die Schnittstelle „3GIO“ genannt, was
+für „3rd Generation Input/Output </wiki/Input/Output>“ steht.
+
+
+    Inhaltsverzeichnis
+
+[Verbergen <#>]
+
+    * 1 Technik <#Technik>
+          o 1.1 Übertragungsschichten <#.C3.9Cbertragungsschichten>
+          o 1.2 Quality of Service <#Quality_of_Service>
+    * 2 Stromversorgung <#Stromversorgung>
+    * 3 Slot-Varianten <#Slot-Varianten>
+    * 4 Kompatibilität von Steckplätzen und Karten
+      <#Kompatibilit.C3.A4t_von_Steckpl.C3.A4tzen_und_Karten>
+    * 5 Literatur <#Literatur>
+    * 6 Weblinks <#Weblinks>
+    * 7 Einzelnachweise <#Einzelnachweise>
+
+
+    Technik [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=1>]
+
+Datenrate PCI-Express
+(theoretisch)   	PCIe 1.0 	PCIe 2.0 	PCIe 3.0
+1x 	0250 MB/s 	00500 MB/s 	1000 MB/s
+2x 	0500 MB/s 	01000 MB/s 	02000 MB/s
+4x 	1000 MB/s 	02000 MB/s 	04000 MB/s
+8x 	2000 MB/s 	04000 MB/s 	08000 MB/s
+16x 	4000 MB/s 	08000 MB/s 	16000 MB/s
+32x 	8000 MB/s 	16000 MB/s 	32000 MB/s
+
+</w/index.php?title=Datei:PCI-Express-graphics-board.jpg&filetimestamp=20051112120927>
+
+</w/index.php?title=Datei:PCI-Express-graphics-board.jpg&filetimestamp=20051112120927>
+PCI-Express-Grafikkarte </wiki/Grafikkarte>
+
+PCIe ist im Vergleich zum parallelen PCI-Bus kein geteiltes (shared) Bus
+</wiki/Bus_(Datenverarbeitung)>-System, sondern eine separate serielle
+</wiki/Serielle_Daten%C3%BCbertragung> Punkt-zu-Punkt-Verbindung
+</wiki/Direktverbindung>. Einzelne Komponenten werden über Switches
+verbunden. Diese ermöglichen es, direkte Verbindungen zwischen einzelnen
+PCIe-Geräten herzustellen, so dass die Kommunikation einzelner Geräte
+untereinander die erreichbare Datenrate anderer Geräte nicht
+beeinflusst. Die Taktrückgewinnung erfolgt aus dem Empfangssignal. Für
+das Senden der Daten werden Parallel-zu-seriell-Wandler und für den
+Empfang Seriell-zu-parallel-Wandler in den Baugruppen eingesetzt.
+
+Trotz dieses sehr anderen physischen Aufbaus ist PCIe softwareseitig
+voll kompatibel zu PCI, so dass weder Betriebssysteme und Treiber noch
+Anwendungsprogramme angepasst werden müssen.
+
+PCIe ist vollduplexfähig </wiki/Duplex_(Nachrichtentechnik)> und
+arbeitet mit einer Datenrate je Lane von maximal 250 MByte
+</wiki/Megabyte>/s </wiki/Sekunde> pro Richtung beziehungsweise 500 MB/s
+in beide Richtungen zusammen (zum Vergleich: der Standard-PCI-Bus mit 32
+Bit </wiki/Bit> Busbreite bei 33 MHz erreicht nur maximal 133 MByte/s).
+In der Praxis erreicht man Raten von über 240 MByte/s bei langen
+Datentransfers. Verwendet man nur eine Lane, spricht man von PCIe x1.
+Durch Koppelung mehrerer Lanes kann man die Datenrate erhöhen, etwa /x4/
+mit vier Lanes bis zu /x32/ mit 32 Lanes. Inzwischen existiert die
+Version 2.0 der PCIe-Spezifikation mit einer Datenrate von 500 MByte/s
+pro Lane. Die PCI-SIG
+</wiki/Peripheral_Component_Interconnect_Special_Interest_Group> plant
+darüber hinaus die Version 3.0, die 1000 MByte/s pro Lane ermöglichen soll.
+
+Sämtliche Datenübertragungen auf den PCIe-Verbindungen werden in Pakete
+aufgeteilt. Auf Grund des grundlegend anderen elektrischen Aufbaus und
+der anderen Übertragungsform sind keine Mischgeräte möglich, die sowohl
+in PCI- als auch PCIe-Slots betrieben werden könnten. Das wird auch
+durch geänderte Anschlüsse erzwungen, so dass zum Einsatz von
+PCIe-Karten entsprechend neuere Motherboards verwendet werden müssen.
+
+PCIe ist wie PCI prinzipiell Hot-Plug </wiki/Hot_Swapping>-fähig, was
+das Ein- und Ausbauen von (z. B. defekten) Erweiterungskarten
+</wiki/Steckkarte> im laufenden Betrieb ermöglicht, sofern die Hardware
+und auch das Betriebssystem das unterstützen.
+
+
+      Übertragungsschichten [Bearbeiten
+      </w/index.php?title=PCI-Express&action=edit&section=2>]
+
+Die Übertragung wird durch mehrere Schichten dargestellt, von denen jede
+nur mit den direkt benachbarten Schichten kommuniziert, sowie für die
+auf dieser Schicht übertragenen Daten eine Fehlererkennung oder
+-korrektur durchführt.
+
+Die unterste Schicht, der so genannte Physical Layer, stellt die
+elektrische Verbindung zwischen zwei direkt miteinander verbundenen
+Geräten dar. Das sind zum Beispiel ein Endgerät (z. B. eine
+Einsteckkarte) und der nächstgelegene Switch. Die logische Verbindung
+(„Link“) zwischen diesen Geräten besteht aus einer oder mehreren Lanes.
+Jede Lane wiederum besteht aus zwei Leitungspaaren, je ein
+differentielles </wiki/Symmetrische_Signal%C3%BCbertragung> Paar für das
+Senden und Empfangen. Die Übertragungsgeschwindigkeit auf diesen
+Leitungen beträgt bei PCIe 1.0 2,525 GBit </wiki/Bit>/s. Zur Sicherung
+der Übertragung wird eine 8b10b-Kodierung </wiki/8b10b-Code> eingesetzt,
+die die Nutzdatenrate dieser Schicht auf 250 MByte/s je Richtung und
+Lane begrenzt.
+
+Sämtliche Daten, die zwischen PCIe-Geräten übertragen werden, werden
+gemischt über diese Leitungen übertragen, im Gegensatz zu PCI gibt es
+also keine eigenen Leitungen mehr für die Signalisierung von Interrupts
+</wiki/Interrupt>. Da das serielle Protokoll jedoch nicht angehalten
+werden kann, ergibt sich eine etwas höhere und auch schwankende
+</wiki/Jitter> Interruptlatenz </wiki/Laufzeit_(Elektrotechnik)> als bei
+klassischem PCI mit dedizierten Interruptleitungen.
+
+Der /Data Link Layer/ überträgt die Datenpakete des /Transaction Layers/
+zwischen den beiden Verbindungspartnern. Dazu verpackt er diese Pakete
+in spezielle /Data Link Layer Packets (DLLP)/, die neben den Nutzdaten
+eine 32 Bit CRC </wiki/Cyclic_Redundancy_Check>, die so genannte /Link
+CRC (LCRC)/ enthalten. Empfangene Pakete werden dem direkten
+Verbindungspartner mitgeteilt, ebenso wie der Zustand des Pakets.
+Beschädigte oder verlorene Pakete werden vom Verbindungspartner erneut
+gesendet. Dadurch werden die höheren Layer von elektrischen
+Übertragungsstörungen entkoppelt. Durch das Verwerfen und erneute Senden
+beschädigter Pakete kann es jedoch dazu kommen, dass die Daten beim
+Empfänger in einer anderen Reihenfolge ankommen, als sie ausgesendet wurden.
+
+Der /Transaction Layer/ transportiert letztlich die Nutzdaten zwischen
+dem logischen Sender und Empfänger, das heißt ohne Berücksichtigung der
+dazwischenliegenden Switches. Die /Transaction Layer Packets (TLP)/
+enthalten im Header eine Kennzeichnung, um was für eine Art von
+Übertragung es sich handelt. Typische Beispiele sind Schreibzugriffe
+(Writes) sowie Leseanforderungen (Reads) sowie Leseantworten
+(Completions). Schreibzugriffe sind so genannte /posted transactions/,
+das heißt, sie werden gesendet und erzeugen auf dem Transaction Layer
+keinerlei Antwort.
+
+
+      Quality of Service [Bearbeiten
+      </w/index.php?title=PCI-Express&action=edit&section=3>]
+
+PCIe bietet als neues Feature gegenüber PCI „Quality of Service
+</wiki/Quality_of_Service>“. Dazu werden virtuelle Kanäle „Virtual
+Channels“ (VC) benutzt, denen eine Priorität „Traffic Class“ (TC)
+zugeordnet wird. Standardmäßig läuft der Datenverkehr über VC0 mit TC0.
+Durch die Benutzung von anderen virtuellen Kanälen kann bestimmter
+Datenverkehr priorisiert werden.
+
+Eine typische Anwendung wäre eine Soundkarte bei der Aufnahme: Kann sie
+ihre Daten nicht rechtzeitig über die Verbindung weiterschicken, weil
+die Verbindung anderweitig belegt ist, so läuft früher oder später der
+Zwischenspeicher der Soundkarte über und es gehen Daten verloren. Für
+diese Echtzeitanwendung </wiki/Echtzeit> würde man den Datenverkehr
+priorisieren.
+
+
+    Stromversorgung [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=4>]
+
+Ein PCI-Express-Steckplatz kann das daran angeschlossene Gerät mit Strom
+versorgen. Laut Spezifikation beträgt die gelieferte Leistung für einen
+gewöhnlichen Slot wie bei PCI </wiki/Peripheral_Component_Interconnect>
+maximal 25 Watt, für Low-Profile-Karten höchstens 10 Watt und bei einem
+PEG-(PCIe-x16)-Slot maximal 75 Watt.^[1]
+<#cite_note-Hotline_.27.27Was_ist_PEG.27.27-0> Da das für manche
+Einsatzzwecke wie Hochleistungsgrafikkarten jedoch zu wenig ist, sieht
+die Spezifikation unterschiedliche Zusatzstecker zur Stromversorgung
+vor, sogenannte PCI-Express (Graphics) Power Supply Connector (auch PEG
+Connector), die +12V liefern.
+
+Die erste Version der Zusatzstecker hat sechs Pins^[2]
+<#cite_note-PCI_Express_Power_.286_pin.29-1> ^[3] <#cite_note-2> und
+kann bis zu 75 Watt liefern, wodurch die dem Gerät maximal
+bereitgestellte Leistung auf 150 Watt steigt, bei Nutzung zweier solche
+Stecker sogar auf 225 Watt. In der Spezifikation von PCI-Express 2.0
+wurde ein neuer Zusatzstecker mit acht Pins definiert, der maximal
+150 Watt führen kann. Für noch höhere Leistungen kann ein zusätzlicher
+Stecker mit sechs Pins genutzt werden, der jedoch nur weitere 75 Watt
+führt, wodurch die maximale Aufnahmeleistung einer PCI-Express-Karte auf
+300 Watt begrenzt ist (75 Watt vom Steckplatz, 150 Watt erster Stecker,
+75 Watt zweiter Stecker).^[4]
+<#cite_note-The_Quick_PCI-Express_2.0_Guide-3> ^[5] <#cite_note-4>
+
+
+    Slot-Varianten [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=5>]
+
+</w/index.php?title=Datei:PCI_und_PCIe_Slots.jpg&filetimestamp=20071022194034>
+
+</w/index.php?title=Datei:PCI_und_PCIe_Slots.jpg&filetimestamp=20071022194034>
+PCIe- (gelb) und PCI-Slots (weiß)
+</w/index.php?title=Datei:Asus_Eee_PC_901_8-Gb_SSD.jpg&filetimestamp=20081120200547>
+
+</w/index.php?title=Datei:Asus_Eee_PC_901_8-Gb_SSD.jpg&filetimestamp=20081120200547>
+Solid State Drive </wiki/Solid_State_Drive> als Mini-PCIe-Steckkarte für
+Notebooks </wiki/Notebook>
+
+Im Desktopbereich wird meist PCIe-x1 als Ersatz für den PCI-Bus und
+PCIe-x16 zur Anbindung einer Grafikkarte </wiki/Grafikkarte> verwendet
+(PCI-Express for Graphics, PEG), was somit auch den AGP
+</wiki/Accelerated_Graphics_Port> überflüssig macht; teilweise kommen
+auch noch x4-Slots zum Einsatz. Während fast alle neueren Grafikkarten
+den PCIe-x16-Slot nutzen, sind bisher (2008) Steckkarten anderer Typen
+(etwa Sound-, Netzwerk- oder Schnittstellenkarten), die für PCIe
+ausgelegt sind, noch kaum verbreitet; vielmehr wird dafür allgemein noch
+der PCI-Slot bevorzugt, der daher auch auf neueren Hauptplatinen fast
+durchweg noch vorhanden ist. Es ist dabei nicht möglich, eine PCI-Karte
+in einen PCIe-Slot zu stecken.
+
+Im Server </wiki/Server>- und Workstationbereich </wiki/Workstation>
+gibt es darüber hinaus noch die PCIe-Varianten x8 und x32. Die Slots
+</wiki/Steckplatz> sind außerdem abwärtskompatibel, das heißt eine
+x1-Karte kann zum Beispiel auch in einen x4-Slot gesteckt werden, die
+überzähligen drei Lanes werden dann einfach nicht benutzt. Die
+entgegengesetzte Variante (z. B. Einstecken eines RAID-Controllers mit 8
+Lanes in einen PCIe-Slot mit 4 Lanes) ist durch die Spezifikation nicht
+abgedeckt, wird aber von sehr vielen Chips und Karten unterstützt.
+Insbesondere können PCIe-x16-Grafikkarten oft auch an PCIe-x8 oder
+PCIe-x4 betrieben werden. Einige Motherboards besitzen PCIe-Steckplätze
+ohne abschließenden Steg, so dass „größere“ Karten eingesteckt werden
+können.
+
+Möglich ist auch, dass Slots eine von der Bauform abweichende Anbindung
+der Lanes haben. Oft zu finden ist das etwa bei SLI
+</wiki/Scalable_Link_Interface> und Crossfire </wiki/ATI_Crossfire>.
+Denn obwohl die Slots für die Grafikkarten die Größe von x16-Slots
+haben, werden beim Einsatz von zwei Grafikkarten die 16 Lanes auf beide
+Slots verteilt, falls die Hauptplatine </wiki/Hauptplatine>
+beziehungsweise der darauf verbaute Chipsatz </wiki/Chipsatz> keine 32
+Lanes für beide Grafikkarten bereitstellt, was dann nur noch acht Lanes
+pro Karte ergibt.
+
+Der Steckplatz ist mechanisch in zwei Bereiche unterteilt: Im linken
+Bereich befinden sich immer 22 Steckkontakte, die hauptsächlich für die
+Stromversorgung und die Taktgebung verantwortlich sind. Im rechten
+Bereich befinden sich je nach Anzahl der Verbindungen 14 bis 142
+Steckkontakte, die für die eigentliche Datenübertragung konzipiert sind.
+
+Lanes 	Steckkontakte insgesamt 	Kontakte in rechtem Teilbereich
+Gesamtlänge 	Länge des rechten Bereiches
+x1 	36 	14 	25 mm 	7,65 mm
+x4 	64 	42 	39 mm 	21,65 mm
+x8 	98 	76 	56 mm 	38,65 mm
+x16 	164 	142 	89 mm 	71,65 mm
+
+Aktuelle Hauptplatinen </wiki/Hauptplatine> mit PCI-Express unterstützen
+bis zu 68 Lanes – in der Regel aufgeteilt in einen bis sechs x16-Slots
+für die Grafikkarte(n) (von denen teilweise manche elektrisch mit
+weniger Lanes betrieben werden, s. o.) oder auch einen x16- und einen
+x4-Slot, dazu mehrere x1-Slots und zur internen Anbindung anderer auf
+dem Mainboard verbauter Geräte (z. B. Gigabit
+</wiki/Ethernet#Gigabit-Ethernet>-Netzwerkchips, damit diese nicht über
+den viel langsameren PCI-Bus angebunden werden müssen).
+
+Darüber hinaus gibt es bei Notebooks </wiki/Notebook> miniaturisierte
+Varianten von PCIe, unter Anderem Mini PCI Express
+</wiki/Mini_PCI_Express> für WLAN </wiki/Wireless_Local_Area_Network>
+oder als SSD </wiki/Solid_State_Drive> und das Mobile PCI-Express Module
+</wiki/Mobile_PCI-Express_Module> für Grafikkarten.
+
+
+    Kompatibilität von Steckplätzen und Karten [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=6>]
+
+	Steckplatz
+Karte 	PCIe x1 	PCIe x4 	PCIe x8 	PCIe x16
+x1 	ok 	ok 	ok 	ok
+x4 	- 	ok 	 ? 	 ?
+x8 	- 	- 	ok 	 ?
+x16 	- 	* 	* 	ok
+
+Legende:
+
+*ok* = kompatibel
+
+*-* = nicht kompatibel
+
+*?* = nicht vorgeschrieben, aber möglich^[6] <#cite_note-5>
+
+*** = Für die Verwendung mehrerer Grafikkarten insbesondere im
+Tandembetrieb (SLI </wiki/Scalable_Link_Interface> oder Crossfire
+</wiki/ATI_Crossfire>) besitzen viele Mainboards Slots, die eine
+16x-Karte aufnehmen können, aber nur als 8x- oder seltener 4x-Slots an
+das System angebunden sind, so dass die maximale Datenrate und damit die
+Leistung der Grafikkarte in diesem Slot entsprechend sinkt.
+
+
+    Literatur [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=7>]
+
+    * Ravi Budruk u. a.: /PCI Express System Architecture./ Addison
+      Wesley, Boston 2004, ISBN 0-321-15630-7
+      </wiki/Spezial:ISBN-Suche/0321156307>.
+
+
+    Weblinks [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=8>]
+
+    * PCI-Express-Spezifikation
+      <http://www.pcisig.com/specifications/pciexpress/> auf pcisig.com
+      (englisch)
+    * PCI Express: Kurz erklärt
+      <http://www.tweakpc.de/hardware/infos/mainboard/pci_express/s01.php>
+      auf tweakpc.de
+    * PCI Express: Grundlagen
+      <http://www.computerbase.de/artikel/hardware/mainboards/2004/bericht_pci_express_die_grundlagen/>
+      auf computerbase.de
+
+
+    Einzelnachweise [Bearbeiten
+    </w/index.php?title=PCI-Express&action=edit&section=9>]
+
+   1. ↑ <#cite_ref-Hotline_.27.27Was_ist_PEG.27.27_0-0> c't Hotline:
+      /Was ist PEG/ <http://www.heise.de/ct/Was-ist-PEG--/hotline/133018>
+   2. ↑ <#cite_ref-PCI_Express_Power_.286_pin.29_1-0> PCI Express Power
+      (6 pin) <http://www.hardwarebook.info/PCI_Express_Power_(6_pin)>
+      auf hardwarebook.info, abgerufen am 7. Dezember 2008 (englisch)
+   3. ↑ <#cite_ref-2> Grafische Darstellung Pinbelegung 6er-Stecker,
+      http://ht4u.net/reviews/2009/power_consumption_graphics/index3.php
+   4. ↑ <#cite_ref-The_Quick_PCI-Express_2.0_Guide_3-0> The Quick
+      PCI-Express 2.0 Guide
+      <http://www.10stripe.com/featured/quick/pci-express-2-0.php> auf
+      10stripe.com, abgerufen am 7. Dezember 2008 (englisch)
+   5. ↑ <#cite_ref-4> Grafische Darstellung Pinbelegung 8er-Stecker,
+      http://ht4u.net/reviews/2009/power_consumption_graphics/index3.php
+   6. ↑ <#cite_ref-5> PCIe – PCI Express
+      <http://www.elektronik-kompendium.de/sites/com/0904051.htm> im
+      Elektronikkompendium
+
+Von „http://de.wikipedia.org/wiki/PCI-Express“
+Kategorie </wiki/Spezial:Kategorien>: Peripheriebus (intern)
+</wiki/Kategorie:Peripheriebus_(intern)>
+
+
+          Meine Werkzeuge
+
+    * Neue Funktionen
+      <http://de.wikipedia.org/w/index.php?title=Spezial:UsabilityInitiativePrefSwitch&from=PCI-Express>
+    * Anmelden / Benutzerkonto erstellen
+      </w/index.php?title=Spezial:Anmelden&returnto=PCI-Express>
+
+
+          Namensräume
+
+    * Artikel </wiki/PCI-Express>
+    * Diskussion </wiki/Diskussion:PCI-Express>
+
+
+          Varianten <#>
+
+
+          Ansichten
+
+    * Lesen </w/index.php?title=PCI-Express&stable=1>
+    * Ungesichtete Änderungen
+      </w/index.php?title=PCI-Express&stable=0&redirect=no>
+    * Bearbeiten </w/index.php?title=PCI-Express&action=edit>
+
+
+          Aktionen <#>
+
+    * Versionsgeschichte </w/index.php?title=PCI-Express&action=history>
+
+
+          Suche
+
+Volltext
+
+</wiki/Wikipedia:Hauptseite>
+
+
+          Navigation
+
+    * Hauptseite </wiki/Wikipedia:Hauptseite>
+    * Über Wikipedia </wiki/Wikipedia:%C3%9Cber_Wikipedia>
+    * Themenportale </wiki/Portal:Wikipedia_nach_Themen>
+    * Von A bis Z </wiki/Spezial:Alle_Seiten>
+    * Zufälliger Artikel </wiki/Spezial:Zuf%C3%A4llige_Seite>
+
+
+          Mitmachen
+
+    * Hilfe </wiki/Wikipedia:Hilfe>
+    * Autorenportal </wiki/Wikipedia:Autorenportal>
+    * Letzte Änderungen </wiki/Spezial:Letzte_%C3%84nderungen>
+    * Kontakt </wiki/Wikipedia:Kontakt>
+    * Spenden <http://meta.wikimedia.org/wiki/Special:GeoLite>
+
+
+          Drucken/exportieren
+
+    * Buch erstellen
+      </w/index.php?title=Spezial:Buch&bookcmd=book_creator&referer=PCI-Express>
+    * Als PDF herunterladen
+      </w/index.php?title=Spezial:Buch&bookcmd=render_article&arttitle=PCI-Express&oldid=78922522&writer=rl>
+    * Druckversion </w/index.php?title=PCI-Express&printable=yes>
+
+
+          Werkzeuge
+
+    * Links auf diese Seite </wiki/Spezial:Linkliste/PCI-Express>
+    * Änderungen an verlinkten Seiten
+      </wiki/Spezial:%C3%84nderungen_an_verlinkten_Seiten/PCI-Express>
+    * Spezialseiten </wiki/Spezial:Spezialseiten>
+    * Permanenter Link </w/index.php?title=PCI-Express&oldid=77278856>
+    * Seite zitieren
+      </w/index.php?title=Spezial:Zitierhilfe&page=PCI-Express&id=77278856>
+
+
+          In anderen Sprachen
+
+    * العربية
+      <http://ar.wikipedia.org/wiki/%D9%85%D9%86%D9%81%D8%B0_%D8%A7%D9%84%D9%85%D9%84%D8%AD%D9%82%D8%A7%D8%AA_%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9_%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9>
+    * Bosanski <http://bs.wikipedia.org/wiki/PCI_Express>
+    * Català <http://ca.wikipedia.org/wiki/PCI_Express>
+    * Česky <http://cs.wikipedia.org/wiki/PCI-Express>
+    * Ελληνικά <http://el.wikipedia.org/wiki/PCI_Express>
+    * English <http://en.wikipedia.org/wiki/PCI_Express>
+    * Esperanto <http://eo.wikipedia.org/wiki/PCI-Express>
+    * Español <http://es.wikipedia.org/wiki/PCI-Express>
+    * فارسی
+      <http://fa.wikipedia.org/wiki/%D9%BE%DB%8C%E2%80%8C%D8%B3%DB%8C%E2%80%8C%D8%A2%DB%8C_%D8%A7%DA%A9%D8%B3%E2%80%8C%D9%BE%D8%B1%D8%B3>
+    * Suomi <http://fi.wikipedia.org/wiki/PCI_Express>
+    * Français <http://fr.wikipedia.org/wiki/PCI_Express>
+    * Galego <http://gl.wikipedia.org/wiki/PCI_Express>
+    * עברית <http://he.wikipedia.org/wiki/PCI_Express>
+    * Hrvatski <http://hr.wikipedia.org/wiki/PCI_Express>
+    * Magyar <http://hu.wikipedia.org/wiki/PCI_Express>
+    * Bahasa Indonesia <http://id.wikipedia.org/wiki/PCI_Express>
+    * Italiano <http://it.wikipedia.org/wiki/PCI_Express>
+    * 日本語 <http://ja.wikipedia.org/wiki/PCI_Express>
+    * ಕನ್ನಡ
+      <http://kn.wikipedia.org/wiki/%E0%B2%AA%E0%B2%BF%E0%B2%B8%E0%B2%BF%E0%B2%90_%E0%B2%8E%E0%B2%95%E0%B3%8D%E0%B2%B8%E0%B3%8D%E2%80%8C%E0%B2%AA%E0%B3%8D%E0%B2%B0%E0%B3%86%E0%B2%B8%E0%B3%8D%E2%80%8C>
+    * 한국어
+      <http://ko.wikipedia.org/wiki/PCI_%EC%9D%B5%EC%8A%A4%ED%94%84%EB%A0%88%EC%8A%A4>
+    * Nederlands <http://nl.wikipedia.org/wiki/PCI_Express>
+    * ‪Norsk (bokmål)‬ <http://no.wikipedia.org/wiki/PCI_Express>
+    * Polski <http://pl.wikipedia.org/wiki/PCI_Express>
+    * Português <http://pt.wikipedia.org/wiki/PCI_Express>
+    * Русский <http://ru.wikipedia.org/wiki/PCI_Express>
+    * Slovenčina <http://sk.wikipedia.org/wiki/PCI-Express>
+    * Српски / Srpski <http://sr.wikipedia.org/wiki/PCI-E>
+    * Svenska <http://sv.wikipedia.org/wiki/PCI_Express>
+    * Türkçe <http://tr.wikipedia.org/wiki/Pci-e>
+    * Українська <http://uk.wikipedia.org/wiki/PCI_Express>
+    * Tiếng Việt <http://vi.wikipedia.org/wiki/PCI_Express>
+    * 中文 <http://zh.wikipedia.org/wiki/PCI_Express>
+
+    * Diese Seite wurde zuletzt am 31. Juli 2010 um 11:02 Uhr geändert.
+    * Der Text ist unter der Lizenz „Creative Commons Attribution/Share
+      Alike“
+      <http://de.wikipedia.org/wiki/Wikipedia:Lizenzbestimmungen_Commons_Attribution-ShareAlike_3.0_Unported>
+      verfügbar; zusätzliche Bedingungen können anwendbar sein.
+      Einzelheiten sind in den Nutzungsbedingungen
+      <http://wikimediafoundation.org/wiki/Nutzungsbedingungen> beschrieben.
+      Wikipedia® ist eine eingetragene Marke der Wikimedia Foundation Inc.
+
+    * Datenschutz </wiki/Wikipedia:Datenschutz>
+    * Über Wikipedia </wiki/Wikipedia:%C3%9Cber_Wikipedia>
+    * Impressum </wiki/Wikipedia:Impressum>
+
+    * Powered by MediaWiki <http://www.mediawiki.org/>
+    * Wikimedia Foundation <http://wikimediafoundation.org/>
+

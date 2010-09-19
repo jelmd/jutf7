@@ -99,18 +99,56 @@ public class AcceptanceTest {
 	}
 
 	private void verifyAll() throws Exception {
-		verifySymmetrical("áéíóúäëïöüàèìòùâêîôûãõçñ€");
-		verifySymmetrical("aábécídóeúfägëhïiöjükàlèmìnòoùpâqêrîsôtûuãvõwçxñy€z");
-		verifySymmetrical("abcáéídefóúäghiëïöjklüàèmnoìòùpqrâêîstuôûãvwxõçñyz€");
-		verifySymmetrical("abcdefghijklmnopqrstuvwyxzáéíóúäëïöüàèìòùâêîôûãõçñ€abcdefghijklmnopqrstuvwyxz");
-		verifySymmetrical("aáb+écí+-dóe-úfä-+gëh+ïiö+-jük-àlè-+mìn+òoù+-pâq-êrî-+sôt+ûuã+-võwç-xñy-+€z+");
-		verifySymmetrical("á+éí+óúä+ëïö++ü++àè++ìòù+++â+++êî+++ôûã+++õçñ€");
-		verifySymmetrical("á+-éí+-óúä+-ëïö++-ü++-àè++-ìòù+++-â+++-êî+++-ôûã+++-õçñ€");
+		char[] c = new char[] { 0xE1, 0xE9, 0xED, 0xF3, 0xFA, 0xE4, 0xEB, 0xEF,
+			0xF6, 0xFC, 0xE0, 0xE8, 0xEC, 0xF2, 0xF9, 0xE2, 0xEA, 0xEE, 0xF4,
+			0xFB, 0xE3, 0xF5, 0xE7, 0xF1, 0x80 };
+		verifySymmetrical(new String(c));
+		char[] c2 = new char[] { 'a', 0xE1, 'b', 0xE9, 'c', 0xED, 'd', 0xF3, 'e', 0xFA,
+			'f', 0xE4, 'g', 0xEB, 'h', 0xEF, 'i', 0xF6, 'j', 0xFC, 'k', 0xE0,
+			'l', 0xE8, 'm', 0xEC, 'n', 0xF2, 'o', 0xF9, 'p', 0xE2, 'q', 0xEA,
+			'r', 0xEE, 's', 0xF4, 't', 0xFB, 'u', 0xE3, 'v', 0xF5, 'w', 0xE7,
+			'x', 0xF1, 'y', 0x80, 'z' };
+		verifySymmetrical(new String(c2));
+		char[] c3 = new char[] { 'a', 'b', 'c', 0xE1, 0xE9, 0xED, 'd', 'e', 'f', 
+			0xF3, 0xFA, 0xE4, 'g', 'h', 'i', 0xEB, 0xEF, 0xF6, 'j', 'k', 'l',
+			0xFC, 0xE0, 0xE8, 'm', 'n', 'o', 0xEC, 0xF2, 0xF9, 'p', 'q', 'r',
+			0xE2, 0xEA, 0xEE, 's', 't', 'u', 0xF4, 0xFB, 0xE3, 'v', 'w', 'x',
+			0xF5, 0xE7, 0xF1, 'y', 'z', 0x80 };
+		verifySymmetrical(new String(c3));
+		verifySymmetrical("abcdefghijklmnopqrstuvwyxz" + new String(c) 
+			+ "abcdefghijklmnopqrstuvwyxz");
+		char[] c4 = new char[] {
+			'a', 0xE1, 'b', '+', 0xE9, 'c', 0xED, '+', '-', 'd', 0xF3, 'e', '-',
+			0xFA, 'f', 0xE4, '-', '+', 'g', 0xEB, 'h', '+', 0xEF, 'i', 0xF6,
+			'+', '-', 'j', 0xFC, 'k', '-', 0xE0, 'l', 0xE8, '-', '+', 'm', 0xEC,
+			'n', '+', 0xF2, 'o', 0xF9, '+', '-', 'p', 0xE2, 'q', '-', 0xEA, 'r',
+			0xEE, '-', '+', 's', 0xF4, 't', '+', 0xFB, 'u', 0xE3, '+', '-', 'v',
+			0xF5, 'w', 0xE7, '-', 'x', 0xF1, 'y', '-', '+', 'z', '+'
+		};
+		verifySymmetrical(new String(c4));
+		char[] c5 = new char[] {
+			0xE1, '+', 0xE9, 0xED, '+', 0xF3, 0xFA, 0xE4, '+', 0xEB, 0xEF, 0xF6,
+			'+', '+', 0xFC, '+', '+', 0xE0, 0xE8, '+', '+', 0xEC, 0xF2, 0xF9,
+			'+', '+', '+', 0xE2, '+', '+', '+', 0xEA, 0xEE, '+', '+', '+', 0xF4,
+			0xFB, 0xE3, '+', '+', '+', 0xF5, 0xE7, 0xF1, 0x80
+		};
+		verifySymmetrical(new String(c5));
+		char[] c6 = new char[] {
+			0xE1, '+', '-', 0xE9, 0xED, '+', '-', 0xF3, 0xFA, 0xE4, '+', '-',
+			0xEB, 0xEF, 0xF6, '+', '+', '-', 0xFC, '+', '+', '-', 0xE0, 0xE8,
+			'+', '+', '-', 0xEC, 0xF2, 0xF9, '+', '+', '+', '-', 0xE2, 
+			'+', '+', '+', '-', 0xEA, 0xEE, '+', '+', '+', '-', 0xF4, 0xFB, 0xE3,
+			'+', '+', '+', '-', 0xF5, 0xE7, 0xF1, 0x80
+		};
+		verifySymmetrical(new String(c6));
 		verifySymmetrical("++++++++");
 		verifySymmetrical("+-++--+++---++");
-		verifySymmetrical("+áéí+");
+		char[] c7 = new char[] { '+', 0xE1, 0xE9, 0xED, '+' };
+		verifySymmetrical(new String(c7));
 		verifySymmetrical("`~!@#$%^&*()_+-=[]\\{}|;':\",./<>?\u0000\r\n\t\b\f€");
-		verifySymmetrical("#aáa#á#áá#ááá#");
+		char[] c8 = new char[] { '#', 'a', 0xE1, 'a', '#', 0xE1, '#', 0xE1, 0xE1,
+			'#', 0xE1, 0xE1, 0xE1, '#' };
+		verifySymmetrical(new String(c8));
 	}
 
 	/**
@@ -144,8 +182,7 @@ public class AcceptanceTest {
 	private String encodeCharsetEncode(String string)
 		throws UnsupportedEncodingException
 	{
-		String charsetEncode = CharsetTestUtil.asString(charset.encode(string));
-		return charsetEncode;
+		return CharsetTestUtil.asString(charset.encode(string));
 	}
 
 	/**

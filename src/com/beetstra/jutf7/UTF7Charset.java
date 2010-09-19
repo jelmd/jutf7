@@ -23,6 +23,8 @@
  */
 package com.beetstra.jutf7;
 
+import java.util.Arrays;
+
 /**
  * The character set specified in RFC 2152. Two variants are supported using the
  * encodeOptional constructor flag.
@@ -33,6 +35,7 @@ package com.beetstra.jutf7;
 class UTF7Charset
 	extends UTF7StyleCharset
 {
+	// SET_B , i.e. base64 without '=' (pad)
 	private static final String BASE64_ALPHABET = 
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	private static final String SET_D = 
@@ -41,12 +44,30 @@ class UTF7Charset
 		"!\"#$%&*;<=>@[]^_`{|}";
 	private static final String RULE_3 = " \t\r\n";
 	final String directlyEncoded;
+	private boolean debug = false;
 
 	UTF7Charset(String name, String[] aliases, boolean includeOptional) {
 		super(name, aliases, BASE64_ALPHABET, false);
 		this.directlyEncoded = includeOptional 
 			? SET_D + SET_O + RULE_3
 			: SET_D + RULE_3;
+		if (debug) {
+			if (includeOptional) {
+				System.out.println("Optional");
+			} else {
+				System.out.println("None-Optional");
+			}
+			byte[] bytes = directlyEncoded.getBytes();
+			Arrays.sort(bytes);
+			System.out.print("0x" + Integer.toHexString(bytes[0]));
+			for (int i=1; i < bytes.length; i++) {
+				if (bytes[i-1] != bytes[i]-1) {
+					System.out.print("-0x" + Integer.toHexString(bytes[i-1]));
+					System.out.print("  0x" + Integer.toHexString(bytes[i]));
+				}
+			}
+			System.out.println("-0x" + Integer.toHexString(bytes[bytes.length-1]));
+		}
 	}
 
 	@Override

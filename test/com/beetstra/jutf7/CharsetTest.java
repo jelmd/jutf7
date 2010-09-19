@@ -26,6 +26,9 @@ package com.beetstra.jutf7;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import org.junit.Ignore;
+
+@Ignore
 abstract class CharsetTest {
 	protected Charset tested;
 
