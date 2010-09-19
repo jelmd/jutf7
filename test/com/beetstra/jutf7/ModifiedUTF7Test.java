@@ -45,14 +45,14 @@ import com.zimbra.cs.mime.charset.ImapUTF7;
 public class ModifiedUTF7Test
 	extends CharsetTest
 {
-	private Charset imapUTF7;
+	private Charset zimbraImapUTF7;
 	
 	/**
 	 * 
 	 */
 	public ModifiedUTF7Test() {
 		super(new ModifiedUTF7Charset("X-MODIFIED-UTF-7", new String[] { }));
-		imapUTF7 = new ImapUTF7("imap-utf-7", new String[] { });
+		zimbraImapUTF7 = new ImapUTF7("imap-utf-7", new String[] { });
 	}
 
 	/**
@@ -85,16 +85,16 @@ public class ModifiedUTF7Test
 	public void testDecodeSimple() throws Exception {
 		String encoded = "abcdefghijklmnopqrstuvwxyz";
 		assertEquals(encoded, decode(encoded));
-		assertEquals(encoded, imap7decode(encoded));
+		assertEquals(encoded, zimbraImapUTF7decode(encoded));
 		String directly = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'(),-./:?\r\n";
 		assertEquals(directly, decode(directly));
-		assertEquals(directly, imap7decode(directly));
+		assertEquals(directly, zimbraImapUTF7decode(directly));
 		String optional = "!\"#$%*;<=>@[]^_'{|}";
 		assertEquals(optional, decode(optional));
-		assertEquals(optional, imap7decode(optional));
+		assertEquals(optional, zimbraImapUTF7decode(optional));
 		String nonUTF7 = "+\\~";
 		assertEquals(nonUTF7, decode(nonUTF7));
-		assertEquals(nonUTF7, imap7decode(nonUTF7));
+		assertEquals(nonUTF7, zimbraImapUTF7decode(nonUTF7));
 	}
 
 	/**
@@ -105,15 +105,15 @@ public class ModifiedUTF7Test
 		String encoded = "A&ImIDkQ-.";
 		String decoded = "A\u2262\u0391.";
 		assertEquals(decoded, decode(encoded));
-		assertEquals(decoded, imap7decode(encoded));
+		assertEquals(decoded, zimbraImapUTF7decode(encoded));
 	}
 
-	private String imap7decode(String s) throws UnsupportedEncodingException {
-		return imapUTF7.decode(CharsetTestUtil.wrap(s)).toString();
+	private String zimbraImapUTF7decode(String s) throws UnsupportedEncodingException {
+		return zimbraImapUTF7.decode(CharsetTestUtil.wrap(s)).toString();
 	}
 
-	private String imap7encode(String decoded) throws UnsupportedEncodingException {
-		return CharsetTestUtil.asString(imapUTF7.encode(decoded));
+	private String zimbraImapUTF7encode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(zimbraImapUTF7.encode(decoded));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class ModifiedUTF7Test
 			0xf6, 0xfc, 0xff });
 		String encoded = "&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-";
 		String b = decode(encoded);
-		String c = imap7decode(encoded);
+		String c = zimbraImapUTF7decode(encoded);
 		String msg = CharsetTestUtil.toHex(decoded, b, c);
 		assertEquals(msg, decoded, b);
 		assertEquals(msg, decoded, c);
@@ -155,7 +155,7 @@ public class ModifiedUTF7Test
 		String decoded = new String(new char[] { 0x20ac , 0xe1, 0xe9 });
 		String encoded = "&IKwA4QDp-";
 		String a = decode(encoded);
-		String b = imap7decode(encoded);
+		String b = zimbraImapUTF7decode(encoded);
 		String msg = CharsetTestUtil.toHex(decoded, a, b);
 		assertEquals(msg, decoded, a);
 		assertEquals(msg, decoded, b);
@@ -167,11 +167,11 @@ public class ModifiedUTF7Test
 	@Test
 	public void testDecodeShiftSequence() throws Exception {
 		assertEquals("&", decode("&-"));
-		assertEquals("&", imap7decode("&-"));
+		assertEquals("&", zimbraImapUTF7decode("&-"));
 		assertEquals("&-", decode("&--"));
-		assertEquals("&-", imap7decode("&--"));
+		assertEquals("&-", zimbraImapUTF7decode("&--"));
 		assertEquals("&&", decode("&-&-"));
-		assertEquals("&&", imap7decode("&-&-"));
+		assertEquals("&&", zimbraImapUTF7decode("&-&-"));
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class ModifiedUTF7Test
 	public void testDecodeUnshiftShiftSequence() throws Exception {
 		assertMalformed("&ImIDkQ-&ImIDkQ-", "\u2262\u0391");
 		assertEquals("\u2262\u0391a\u2262\u0391", decode("&ImIDkQ-a&ImIDkQ-"));
-		assertEquals("\u2262\u0391a\u2262\u0391", imap7decode("&ImIDkQ-a&ImIDkQ-"));
+		assertEquals("\u2262\u0391a\u2262\u0391", zimbraImapUTF7decode("&ImIDkQ-a&ImIDkQ-"));
 	}
 
 	/**
@@ -248,13 +248,13 @@ public class ModifiedUTF7Test
 	public void testEncodeSimple() throws Exception {
 		String directly = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'(),-./:?";
 		assertEquals(directly, encode(directly));
-		assertEquals(directly, imap7encode(directly));
+		assertEquals(directly, zimbraImapUTF7encode(directly));
 		String optional = "!\"#$%*;<=>@[]^_'{|}";
 		assertEquals(optional, encode(optional));
-		assertEquals(optional, imap7encode(optional));
+		assertEquals(optional, zimbraImapUTF7encode(optional));
 		String nonUTF7 = "+\\~";
 		assertEquals(nonUTF7, encode(nonUTF7));
-		assertEquals(nonUTF7, imap7encode(nonUTF7));
+		assertEquals(nonUTF7, zimbraImapUTF7encode(nonUTF7));
 	}
 
 	/**
@@ -263,10 +263,10 @@ public class ModifiedUTF7Test
 	@Test
 	public void testEncodeComplex() throws Exception {
 		assertEquals("A&ImIDkQ-.", encode("A\u2262\u0391."));
-		assertEquals("A&ImIDkQ-.", imap7encode("A\u2262\u0391."));
+		assertEquals("A&ImIDkQ-.", zimbraImapUTF7encode("A\u2262\u0391."));
 		String decoded = new String(new char[] { 0xed, 0xe1 });
 		assertEquals("&AO0A4Q-", encode(decoded));
-		assertEquals("&AO0A4Q-", imap7encode(decoded));
+		assertEquals("&AO0A4Q-", zimbraImapUTF7encode(decoded));
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class ModifiedUTF7Test
 		String decoded = new String(new char[] { 0x20ac, 0xe1, 0xe9, 0xfa, 0xed,
 			0xf3, 0xfd, 0xe4, 0xeb, 0xef, 0xf6, 0xfc, 0xff });
 		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", encode(decoded));
-		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", imap7encode(decoded));
+		assertEquals("&IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", zimbraImapUTF7encode(decoded));
 	}
 
 	private static final String EOL = System.getProperty("line.separator");
@@ -291,12 +291,12 @@ public class ModifiedUTF7Test
 		String encoded = encode(decoded);
 		String msg = EOL + decoded + EOL + encoded + EOL;
 		assertEquals(msg, "&AL4AvgC+-", encoded);
-		assertEquals(msg, "&AL4AvgC+-", imap7encode(decoded));
+		assertEquals(msg, "&AL4AvgC+-", zimbraImapUTF7encode(decoded));
 		decoded = new String(new char[] { 0xbf, 0xbf, 0xbf });
 		encoded = encode(decoded);
 		msg = EOL + decoded + EOL + encoded + EOL;
 		assertEquals(msg, "&AL8AvwC,-", encoded);
-		assertEquals(msg, "&AL8AvwC,-", imap7encode(decoded));
+		assertEquals(msg, "&AL8AvwC,-", zimbraImapUTF7encode(decoded));
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class ModifiedUTF7Test
 			cr.throwException();
 		bb.flip();
 		assertEquals("caf&AOk-", CharsetTestUtil.asString(bb));
-		assertEquals("caf&AOk-", imap7encode(string));
+		assertEquals("caf&AOk-", zimbraImapUTF7encode(string));
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class ModifiedUTF7Test
 		throws UnsupportedEncodingException
 	{
 		CharsetDecoder[] decoder = new CharsetDecoder[] {
-			tested.newDecoder(), imapUTF7.newDecoder()  
+			tested.newDecoder(), zimbraImapUTF7.newDecoder()  
 		};
 		for (int i=0; i < decoder.length; i++) {
 			ByteBuffer in = CharsetTestUtil.wrap(encoded);

@@ -44,22 +44,32 @@ import com.zimbra.cs.mime.charset.UTF7;
 public class UTF7Test
 	extends CharsetTest
 {
-	private Charset utf7;
+	private Charset zimbraUTF7;
+	private Charset freeutilsUTF7;
 
 	/**
 	 * 
 	 */
 	public UTF7Test() {
 		super(new UTF7Charset("UTF-7", new String[] { }, false));
-		utf7 = new UTF7("utf-7", new String[] { });
+		zimbraUTF7 = new UTF7("utf-7", new String[] { });
+		freeutilsUTF7 = new net.freeutils.charset.UTF7Charset();
 	}
 
-	private String utf7decode(String s) throws UnsupportedEncodingException {
-		return utf7.decode(CharsetTestUtil.wrap(s)).toString();
+	private String zimbraUTF7decode(String s) throws UnsupportedEncodingException {
+		return zimbraUTF7.decode(CharsetTestUtil.wrap(s)).toString();
 	}
 
-	private String utf7encode(String decoded) throws UnsupportedEncodingException {
-		return CharsetTestUtil.asString(utf7.encode(decoded));
+	private String zimbraUTF7encode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(zimbraUTF7.encode(decoded));
+	}
+
+	private String freeutilsUTF7decode(String s) throws UnsupportedEncodingException {
+		return freeutilsUTF7.decode(CharsetTestUtil.wrap(s)).toString();
+	}
+
+	private String freeutilsUTF7encode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(freeutilsUTF7.encode(decoded));
 	}
 
 	/**
@@ -82,9 +92,11 @@ public class UTF7Test
 	public void testEmpty() throws Exception {
 		String string = "";
 		assertEquals(string, decode(string));
-		assertEquals(string, utf7decode(string));
+		assertEquals(string, zimbraUTF7decode(string));
+		assertEquals(string, freeutilsUTF7decode(string));
 		assertEquals(string, encode(string));
-		assertEquals(string, utf7encode(string));
+		assertEquals(string, zimbraUTF7encode(string));
+		assertEquals(string, freeutilsUTF7encode(string));
 	}
 
 	/**
@@ -95,7 +107,9 @@ public class UTF7Test
 		assertEquals("abcdefghijklmnopqrstuvwxyz",
 			decode("abcdefghijklmnopqrstuvwxyz"));
 		assertEquals("abcdefghijklmnopqrstuvwxyz",
-			utf7decode("abcdefghijklmnopqrstuvwxyz"));
+			zimbraUTF7decode("abcdefghijklmnopqrstuvwxyz"));
+		assertEquals("abcdefghijklmnopqrstuvwxyz",
+			freeutilsUTF7decode("abcdefghijklmnopqrstuvwxyz"));
 	}
 
 	/**
@@ -104,11 +118,14 @@ public class UTF7Test
 	@Test
 	public void testDecodeShiftSequence() throws Exception {
 		assertEquals("+", decode("+-"));
-		assertEquals("+", utf7decode("+-"));
+		assertEquals("+", zimbraUTF7decode("+-"));
+		assertEquals("+", freeutilsUTF7decode("+-"));
 		assertEquals("+-", decode("+--"));
-		assertEquals("+-", utf7decode("+--"));
+		assertEquals("+-", zimbraUTF7decode("+--"));
+		assertEquals("+-", freeutilsUTF7decode("+--"));
 		assertEquals("++", decode("+-+-"));
-		assertEquals("++", utf7decode("+-+-"));
+		assertEquals("++", zimbraUTF7decode("+-+-"));
+		assertEquals("++", freeutilsUTF7decode("+-+-"));
 	}
 
 	/**
@@ -117,13 +134,17 @@ public class UTF7Test
 	@Test
 	public void testDecodeBase64() throws Exception {
 		assertEquals("Hi Mom \u263A!", decode("Hi Mom +Jjo-!"));
-		assertEquals("Hi Mom \u263A!", utf7decode("Hi Mom +Jjo-!"));
+		assertEquals("Hi Mom \u263A!", zimbraUTF7decode("Hi Mom +Jjo-!"));
+		assertEquals("Hi Mom \u263A!", freeutilsUTF7decode("Hi Mom +Jjo-!"));
 		assertEquals("Hi Mom -\u263A-!", decode("Hi Mom -+Jjo--!"));
-		assertEquals("Hi Mom -\u263A-!", utf7decode("Hi Mom -+Jjo--!"));
+		assertEquals("Hi Mom -\u263A-!", zimbraUTF7decode("Hi Mom -+Jjo--!"));
+		assertEquals("Hi Mom -\u263A-!", freeutilsUTF7decode("Hi Mom -+Jjo--!"));
 		assertEquals("\u65E5\u672C\u8A9E", decode("+ZeVnLIqe-"));
-		assertEquals("\u65E5\u672C\u8A9E", utf7decode("+ZeVnLIqe-"));
+		assertEquals("\u65E5\u672C\u8A9E", zimbraUTF7decode("+ZeVnLIqe-"));
+		assertEquals("\u65E5\u672C\u8A9E", freeutilsUTF7decode("+ZeVnLIqe-"));
 		assertEquals("Item 3 is " + (char) 0xA3 + "1.", decode("Item 3 is +AKM-1."));
-		assertEquals("Item 3 is " + (char) 0xA3 + "1.", utf7decode("Item 3 is +AKM-1."));
+		assertEquals("Item 3 is " + (char) 0xA3 + "1.", zimbraUTF7decode("Item 3 is +AKM-1."));
+		assertEquals("Item 3 is " + (char) 0xA3 + "1.", freeutilsUTF7decode("Item 3 is +AKM-1."));
 	}
 
 	/**
@@ -134,11 +155,11 @@ public class UTF7Test
 		String c = new String(new char[] { 'x', 'x', 'x', 0xFF, 'x', 0xFF, 'x', 
 			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF });
 		assertEquals(c, decode("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-"));
-		assertEquals(c, utf7decode("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-"));
-		assertEquals("\u2262\u0391123\u2262\u0391",
-			decode("+ImIDkQ-123+ImIDkQ"));
-		assertEquals("\u2262\u0391123\u2262\u0391",
-			utf7decode("+ImIDkQ-123+ImIDkQ"));
+		assertEquals(c, zimbraUTF7decode("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-"));
+		assertEquals(c, freeutilsUTF7decode("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-"));
+		assertEquals("\u2262\u0391123\u2262\u0391", decode("+ImIDkQ-123+ImIDkQ"));
+		assertEquals("\u2262\u0391123\u2262\u0391", zimbraUTF7decode("+ImIDkQ-123+ImIDkQ"));
+		assertEquals("\u2262\u0391123\u2262\u0391", freeutilsUTF7decode("+ImIDkQ-123+ImIDkQ"));
 	}
 
 	/**
@@ -148,13 +169,16 @@ public class UTF7Test
 	public void testDecodeUnclosed() throws Exception {
 		String c = new String(new char[] { 0xFF, 0xFF, 0xFF, '#' });
 		assertEquals(c, decode("+AP8A/wD/#"));
-		assertEquals(c, utf7decode("+AP8A/wD/#"));
+		assertEquals(c, zimbraUTF7decode("+AP8A/wD/#"));
+		assertEquals(c, freeutilsUTF7decode("+AP8A/wD/#"));
 		c = new String(new char[] { 0xFF, 0xFF, '#' });
 		assertEquals(c, decode("+AP8A/w#"));
-		assertEquals(c, utf7decode("+AP8A/w#"));
+		assertEquals(c, zimbraUTF7decode("+AP8A/w#"));
+		assertEquals(c, freeutilsUTF7decode("+AP8A/w#"));
 		c = new String(new char[] { '#', 0xE1, 0xE1, '#', 0xE1, 0xE1, 0xE1, '#' });
 		assertEquals(c, decode("#+AOEA4Q#+AOEA4QDh#"));
-		assertEquals(c, utf7decode("#+AOEA4Q#+AOEA4QDh#"));
+		assertEquals(c, zimbraUTF7decode("#+AOEA4Q#+AOEA4QDh#"));
+		assertEquals(c, freeutilsUTF7decode("#+AOEA4Q#+AOEA4QDh#"));
 	}
 
 	/**
@@ -164,10 +188,12 @@ public class UTF7Test
 	public void testDecodeNoUnshiftAtEnd() throws Exception {
 		String c = new String(new char[] { 0x20ac, 0xE1, 0xE9 });
 		assertEquals(c, decode("+IKwA4QDp"));
-		assertEquals(c, utf7decode("+IKwA4QDp"));
+		assertEquals(c, zimbraUTF7decode("+IKwA4QDp"));
+		assertEquals(c, freeutilsUTF7decode("+IKwA4QDp"));
 		c = new String(new char[] { '#', 0xE1, 0xE1, 0xE1 });
 		assertEquals(c, decode("#+AOEA4QDh"));
-		assertEquals(c, utf7decode("#+AOEA4QDh"));
+		assertEquals(c, zimbraUTF7decode("#+AOEA4QDh"));
+		assertEquals(c, freeutilsUTF7decode("#+AOEA4QDh"));
 	}
 
 	/**
@@ -180,7 +206,8 @@ public class UTF7Test
 		verifyMalformed("+IKwA4#");
 		String c = new String(new char[] { 0x20ac, 0xE1 });
 		assertEquals(c, decode("+IKwA4Q"));
-		assertEquals(c, utf7decode("+IKwA4Q"));
+		assertEquals(c, zimbraUTF7decode("+IKwA4Q"));
+		assertEquals(c, freeutilsUTF7decode("+IKwA4Q"));
 	}
 
 	/**
@@ -189,7 +216,8 @@ public class UTF7Test
 	@Test
 	public void testDecodeOptionalCharsUTF7() throws Exception {
 		assertEquals("~!@", decode("+AH4AIQBA-"));
-		assertEquals("~!@", utf7decode("+AH4AIQBA-"));
+		assertEquals("~!@", zimbraUTF7decode("+AH4AIQBA-"));
+		assertEquals("~!@", freeutilsUTF7decode("+AH4AIQBA-"));
 	}
 
 	/**
@@ -198,7 +226,8 @@ public class UTF7Test
 	@Test
 	public void testDecodeOptionalCharsPlain() throws Exception {
 		assertEquals("!\"#$%*;<=>@[]^_'{|}", decode("!\"#$%*;<=>@[]^_'{|}"));
-		assertEquals("!\"#$%*;<=>@[]^_'{|}", utf7decode("!\"#$%*;<=>@[]^_'{|}"));
+		assertEquals("!\"#$%*;<=>@[]^_'{|}", zimbraUTF7decode("!\"#$%*;<=>@[]^_'{|}"));
+		assertEquals("!\"#$%*;<=>@[]^_'{|}", freeutilsUTF7decode("!\"#$%*;<=>@[]^_'{|}"));
 	}
 
 	/**
@@ -225,7 +254,7 @@ public class UTF7Test
 		throws UnsupportedEncodingException
 	{
 		CharsetDecoder[] decoder = new CharsetDecoder[] {
-			tested.newDecoder(), utf7.newDecoder()
+			tested.newDecoder(), zimbraUTF7.newDecoder(), freeutilsUTF7.newDecoder()
 		};
 		for (int i=0; i < decoder.length; i++) {
 			ByteBuffer in = CharsetTestUtil.wrap(encoded);
@@ -248,9 +277,12 @@ public class UTF7Test
 		assertEquals("abcdefghijklmnopqrstuvwxyz",
 			CharsetTestUtil.asString(tested.encode("abcdefghijklmnopqrstuvwxyz")));
 		assertEquals("abcdefghijklmnopqrstuvwxyz",
-			utf7encode("abcdefghijklmnopqrstuvwxyz"));
+			zimbraUTF7encode("abcdefghijklmnopqrstuvwxyz"));
+		assertEquals("abcdefghijklmnopqrstuvwxyz",
+			freeutilsUTF7encode("abcdefghijklmnopqrstuvwxyz"));
 		assertEquals(" \r\t\n", CharsetTestUtil.asString(tested.encode(" \r\t\n")));
-		assertEquals(" \r\t\n", utf7encode(" \r\t\n"));
+		assertEquals(" \r\t\n", zimbraUTF7encode(" \r\t\n"));
+		assertEquals(" \r\t\n", freeutilsUTF7encode(" \r\t\n"));
 	}
 
 	/**
@@ -262,8 +294,10 @@ public class UTF7Test
 		String encoded2 = "A+ImIDkQ-."; // explicit unshift
 		String a = encode("A\u2262\u0391.");
 		assertEquals(encoded, a);
-		a = utf7encode("A\u2262\u0391.");
+		a = zimbraUTF7encode("A\u2262\u0391.");
 		assertTrue(encoded.equals(a) || encoded2.equals(a));
+		a = freeutilsUTF7encode("A\u2262\u0391.");
+		assertEquals(encoded, a);
 	}
 
 	/**
@@ -272,7 +306,8 @@ public class UTF7Test
 	@Test
 	public void testEncodeBase64NoImplicitUnshift() throws Exception {
 		assertEquals("A+ImIDkQ-A", encode("A\u2262\u0391A"));
-		assertEquals("A+ImIDkQ-A", utf7encode("A\u2262\u0391A"));
+		assertEquals("A+ImIDkQ-A", zimbraUTF7encode("A\u2262\u0391A"));
+		assertEquals("A+ImIDkQ-A", freeutilsUTF7encode("A\u2262\u0391A"));
 	}
 
 	/**
@@ -283,7 +318,8 @@ public class UTF7Test
 		String c = new String(new char[] { 0x20ac, 0xE1, 0xE9, 0xFA, 0xED, 0xF3,
 			0xFD, 0xE4, 0xEB, 0xEF, 0xF6, 0xFC, 0xFF });
 		assertEquals("+IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", encode(c));
-		assertEquals("+IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", utf7encode(c));
+		assertEquals("+IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", zimbraUTF7encode(c));
+		assertEquals("+IKwA4QDpAPoA7QDzAP0A5ADrAO8A9gD8AP8-", freeutilsUTF7encode(c));
 	}
 
 	/**
@@ -292,6 +328,8 @@ public class UTF7Test
 	@Test
 	public void testEncodeShiftUnshift() throws Exception {
 		assertEquals("+--", encode("+-"));
+		assertEquals("+--", zimbraUTF7encode("+-"));
+		assertEquals("+--", freeutilsUTF7encode("+-"));
 	}
 
 	/**
@@ -301,7 +339,8 @@ public class UTF7Test
 	public void testEncodeAddUnshiftOnUnshift() throws Exception {
 		String encoded = new String(new char[] { 0xED, '+', '-'});
 		assertEquals("+AO0AKw--", encode(encoded));
-		assertEquals("+AO0AKw--", utf7encode(encoded));
+		assertEquals("+AO0AKw--", zimbraUTF7encode(encoded));
+		assertEquals("+AO0AKw--", freeutilsUTF7encode(encoded));
 	}
 
 	/**
@@ -314,18 +353,21 @@ public class UTF7Test
 			0xFF, 0xFF
 		});
 		assertEquals("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-", encode(decoded));
-		assertEquals("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-", utf7encode(decoded));
+		assertEquals("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-", zimbraUTF7encode(decoded));
+		assertEquals("xxx+AP8-x+AP8-x+AP8A/wD/AP8A/wD/AP8-", freeutilsUTF7encode(decoded));
 		String decoded2 = new String(new char[] {
 			0xFF, 0xFF, 0xFF, 0xFF, 'x', 0xFF, 0xFF, 0xFF, 0xFF
 		});
 		assertEquals("+AP8A/wD/AP8-x+AP8A/wD/AP8-", encode(decoded2));
-		assertEquals("+AP8A/wD/AP8-x+AP8A/wD/AP8-", utf7encode(decoded2));
+		assertEquals("+AP8A/wD/AP8-x+AP8A/wD/AP8-", zimbraUTF7encode(decoded2));
+		assertEquals("+AP8A/wD/AP8-x+AP8A/wD/AP8-", freeutilsUTF7encode(decoded2));
 		String decoded3 = new String(new char[] {
 			'a', 'b', 'c', 0xE1, 0xE9, 0xED, 'd', 'e', 'f', 0xF3, 0xFA, 0xE4,
 			'g', 'h'
 		});
 		assertEquals("abc+AOEA6QDt-def+APMA+gDk-gh", encode(decoded3));
-		assertEquals("abc+AOEA6QDt-def+APMA+gDk-gh", utf7encode(decoded3));
+		assertEquals("abc+AOEA6QDt-def+APMA+gDk-gh", zimbraUTF7encode(decoded3));
+		assertEquals("abc+AOEA6QDt-def+APMA+gDk-gh", freeutilsUTF7encode(decoded3));
 	}
 
 	/**
@@ -336,7 +378,9 @@ public class UTF7Test
 		assertEquals("+ACEAIgAjACQAJQAqADsAPAA9AD4AQABbAF0AXgBfAGAAewB8AH0-",
 			encode("!\"#$%*;<=>@[]^_`{|}"));
 		assertEquals("+ACEAIgAjACQAJQAqADsAPAA9AD4AQABbAF0AXgBfAGAAewB8AH0-",
-			utf7encode("!\"#$%*;<=>@[]^_`{|}"));
+			zimbraUTF7encode("!\"#$%*;<=>@[]^_`{|}"));
+		assertEquals("+ACEAIgAjACQAJQAqADsAPAA9AD4AQABbAF0AXgBfAGAAewB8AH0-",
+			freeutilsUTF7encode("!\"#$%*;<=>@[]^_`{|}"));
 	}
 
 	/**
@@ -346,9 +390,11 @@ public class UTF7Test
 	public void testEncodeAlphabet() throws Exception {
 		String decoded = new String(new char[] { 0xBE, 0xBE, 0xBE });
 		assertEquals("+AL4AvgC+-", encode(decoded));
-		assertEquals("+AL4AvgC+-", utf7encode(decoded));
+		assertEquals("+AL4AvgC+-", zimbraUTF7encode(decoded));
+		assertEquals("+AL4AvgC+-", freeutilsUTF7encode(decoded));
 		String decoded2 = new String(new char[] { 0xBF, 0xBF, 0xBF });
 		assertEquals("+AL8AvwC/-", encode(decoded2));
-		assertEquals("+AL8AvwC/-", utf7encode(decoded2));
+		assertEquals("+AL8AvwC/-", zimbraUTF7encode(decoded2));
+		assertEquals("+AL8AvwC/-", freeutilsUTF7encode(decoded2));
 	}
 }

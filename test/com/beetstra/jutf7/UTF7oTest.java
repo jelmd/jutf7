@@ -24,8 +24,16 @@
 package com.beetstra.jutf7;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import net.freeutils.charset.UTF7OptionalCharset;
 
 import org.junit.Test;
+
+import com.zimbra.cs.mime.charset.UTF7;
 
 /**
  * @author 	Firstname Lastname
@@ -34,11 +42,32 @@ import org.junit.Test;
 public class UTF7oTest
 	extends CharsetTest
 {
+	private Charset zimbraUTF7;
+	private Charset freeutilsUTF7o;
+
+	private String zimbraUTF7decode(String s) throws UnsupportedEncodingException {
+		return zimbraUTF7.decode(CharsetTestUtil.wrap(s)).toString();
+	}
+
+	private String zimbraUTF7encode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(zimbraUTF7.encode(decoded));
+	}
+
+	private String freeutilsUTF7odecode(String s) throws UnsupportedEncodingException {
+		return freeutilsUTF7o.decode(CharsetTestUtil.wrap(s)).toString();
+	}
+
+	private String freeutilsUTF7oencode(String decoded) throws UnsupportedEncodingException {
+		return CharsetTestUtil.asString(freeutilsUTF7o.encode(decoded));
+	}
+
 	/**
 	 * 
 	 */
 	public UTF7oTest() {
 		super(new UTF7Charset("X-UTF-7-Optional", new String[] { }, true));
+		zimbraUTF7 = new UTF7("utf-7", new String[] { });
+		freeutilsUTF7o = new UTF7OptionalCharset();
 	}
 
 	/**
@@ -47,6 +76,8 @@ public class UTF7oTest
 	@Test
 	public void testDecodeOptionalCharsUTF7() throws Exception {
 		assertEquals("~!@", decode("+AH4AIQBA-"));
+		assertEquals("~!@", zimbraUTF7decode("+AH4AIQBA-"));
+		assertEquals("~!@", freeutilsUTF7odecode("+AH4AIQBA-"));
 	}
 
 	/**
@@ -55,6 +86,8 @@ public class UTF7oTest
 	@Test
 	public void testDecodeOptionalCharsPlain() throws Exception {
 		assertEquals("!\"#$%*;<=>@[]^_'{|}", decode("!\"#$%*;<=>@[]^_'{|}"));
+		assertEquals("!\"#$%*;<=>@[]^_'{|}", zimbraUTF7decode("!\"#$%*;<=>@[]^_'{|}"));
+		assertEquals("!\"#$%*;<=>@[]^_'{|}", freeutilsUTF7odecode("!\"#$%*;<=>@[]^_'{|}"));
 	}
 
 	/**
@@ -63,5 +96,8 @@ public class UTF7oTest
 	@Test
 	public void testEncodeOptionalCharsUTF7() throws Exception {
 		assertEquals("!\"#$%*;<=>@[]^_`{|}", encode("!\"#$%*;<=>@[]^_`{|}"));
+		// zimbra UTF does not use optional chars
+		assertFalse("!\"#$%*;<=>@[]^_`{|}".equals(zimbraUTF7encode("!\"#$%*;<=>@[]^_`{|}")));
+		assertEquals("!\"#$%*;<=>@[]^_`{|}", freeutilsUTF7oencode("!\"#$%*;<=>@[]^_`{|}"));
 	}
 }
