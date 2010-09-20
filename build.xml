@@ -360,6 +360,19 @@
 		<delete file="${last.test.failed.file}"/>
 	</target>
 
+	<target name="bench" description="benchmark available implementations"
+		depends="compile.test">
+		<java newenvironment="true" fork="true" classname="de.ovgu.cs.utf7.Benchmark">
+			<arg file="${basedir}/etc/PCIe.txt" />
+			<arg file="${basedir}/etc/benchresults.txt" />
+			<jvmarg value="-server"/>
+			<jvmarg value="-Xms64M"/>
+			<jvmarg value="-Xmx64M"/>
+			<classpath>
+				<pathelement location="${build.class.dir}" />
+			</classpath>
+		</java>
+	</target>
 	<!--
 	##########################################################################
 	#                              DIST targets                              #

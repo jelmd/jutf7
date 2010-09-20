@@ -88,9 +88,21 @@ class UTF7StyleCharsetEncoder
 			}
 			char ch = in.get();
 			if (cs.canEncodeDirectly(ch)) {
-				unshift(out, ch);
+				if (base64mode) {
+					// write remaining base64 char
+					if (bitsToOutput != 0) {
+						out.put(base64.getChar(sextet));
+					}
+					// unshift, if required
+					if (base64.contains(ch) || ch == unshift || strict) {
+						out.put(unshift);
+					}
+					base64mode = false;
+					sextet = 0;
+					bitsToOutput = 0;
+				}
 				out.put((byte) ch);
-			} else if ( !base64mode && ch == shift) {
+			} else if (ch == shift && !base64mode) {
 				out.put(shift);
 				out.put(unshift);
 			} else {
@@ -98,28 +110,6 @@ class UTF7StyleCharsetEncoder
 			}
 		}
 		return CoderResult.UNDERFLOW;
-	}
-
-	/**
-	 * Writes the bytes necessary to leave <i>base 64 mode</i>. This might
-	 * include an unshift character.
-	 * 
-	 * @param out
-	 * @param ch
-	 */
-	private void unshift(ByteBuffer out, char ch) {
-		if ( !base64mode) {
-			return;
-		}
-		if (bitsToOutput != 0) {
-			out.put(base64.getChar(sextet));
-		}
-		if (base64.contains(ch) || ch == unshift || strict) {
-			out.put(unshift);
-		}
-		base64mode = false;
-		sextet = 0;
-		bitsToOutput = 0;
 	}
 
 	/**

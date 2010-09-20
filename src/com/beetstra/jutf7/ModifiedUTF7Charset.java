@@ -42,7 +42,7 @@ class ModifiedUTF7Charset
 
 	@Override
 	boolean canEncodeDirectly(char ch) {
-		return ch != shift() && ch >= 0x20 && ch <= 0x7E;
+		return ch <= 0x7E && ch >= 0x20 && ch != shift();
 	}
 
 	@Override

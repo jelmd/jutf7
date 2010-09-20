@@ -23,7 +23,6 @@
  */
 package com.beetstra.jutf7;
 
-import java.util.Arrays;
 
 /**
  * The character set specified in RFC 2152. Two variants are supported using the
@@ -43,36 +42,45 @@ class UTF7Charset
 	private static final String SET_O = 
 		"!\"#$%&*;<=>@[]^_`{|}";
 	private static final String RULE_3 = " \t\r\n";
-	final String directlyEncoded;
+	private long direct0;
+	private long direct1;
 	private boolean debug = false;
 
 	UTF7Charset(String name, String[] aliases, boolean includeOptional) {
 		super(name, aliases, BASE64_ALPHABET, false);
-		this.directlyEncoded = includeOptional 
-			? SET_D + SET_O + RULE_3
-			: SET_D + RULE_3;
+		char[] all = (includeOptional ? SET_D + SET_O + RULE_3 : SET_D + RULE_3)
+			.toCharArray();
+		direct0 = 0;
+		direct1 = 0;
+		for (int i=all.length-1; i >= 0; i--) {
+			if (all[i] < 64) {
+				direct0 |= 1L << all[i];
+			} else {
+				direct1 |= 1L << (all[i] - 64);
+			}
+		}
 		if (debug) {
 			if (includeOptional) {
 				System.out.println("Optional");
 			} else {
 				System.out.println("None-Optional");
 			}
-			byte[] bytes = directlyEncoded.getBytes();
-			Arrays.sort(bytes);
-			System.out.print("0x" + Integer.toHexString(bytes[0]));
-			for (int i=1; i < bytes.length; i++) {
-				if (bytes[i-1] != bytes[i]-1) {
-					System.out.print("-0x" + Integer.toHexString(bytes[i-1]));
-					System.out.print("  0x" + Integer.toHexString(bytes[i]));
+			System.out.print("0x" + Integer.toHexString(all[0]));
+			for (int i=1; i < all.length; i++) {
+				if (all[i-1] != all[i]-1) {
+					System.out.print("-0x" + Integer.toHexString(all[i-1]));
+					System.out.print("  0x" + Integer.toHexString(all[i]));
 				}
 			}
-			System.out.println("-0x" + Integer.toHexString(bytes[bytes.length-1]));
+			System.out.println("-0x" + Integer.toHexString(all[all.length-1]));
 		}
 	}
 
 	@Override
 	boolean canEncodeDirectly(char ch) {
-		return directlyEncoded.indexOf(ch) >= 0;
+		return ch < 64
+			? (direct0 & (1L << ch)) != 0
+			: (ch < 128 ? (direct1 & (1L << (ch - 64))) != 0 : false);		
 	}
 
 	@Override

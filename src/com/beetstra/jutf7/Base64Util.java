@@ -97,9 +97,11 @@ class Base64Util {
 	 * 
 	 * @param ch	The character to check.
 	 * @return {@code true} if the alphabet contains <code>ch</code>.
+	 * @throws ArrayIndexOutOfBoundsException if the given char is not in the
+	 * 	range of 0 .. 128
 	 */
 	boolean contains(final char ch) {
-		return ch < 128 && inverseAlphabet[ch] >= 0;
+		return inverseAlphabet[ch] >= 0;
 	}
 
 	/**
