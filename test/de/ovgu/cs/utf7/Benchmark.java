@@ -20,11 +20,11 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.spi.CharsetProvider;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -139,8 +139,9 @@ public class Benchmark {
 		return ByteBuffer.allocateDirect(max);
 	}
 	
-	private static void printSummary(String[] units, String[] rowID, 
-		double[][] stats, File file) 
+	@SuppressWarnings("boxing")
+	private static void printSummary(String[] units, String[][] rowID, 
+		double[][] stats, double[][] stats2, File file) 
 	{
 		StringWriter sw = new StringWriter();
 		PrintWriter out = new PrintWriter(sw, false);
@@ -149,12 +150,15 @@ public class Benchmark {
 			out.printf(" %6s", units[i]);
 		}
 		out.printf("%n");
-		for (int i=0; i < rowID.length; i++) {
-			out.printf("%58s", rowID[i]);
-			for (int k=0; k < units.length; k++) {
-				out.printf(" %6.2f", stats[i][k]);
+		for (int x = 0; x < 2; x++) {
+			double[][] cstats = x == 0 ? stats : stats2;
+			for (int i=0; i < rowID[x].length; i++) {
+				out.printf("%c %58s", x==0 ? 'e' : 'c', rowID[x][i]);
+				for (int k=0; k < units.length; k++) {
+					out.printf(" %6.2f", cstats[i][k]);
+				}
+				out.printf("%n");
 			}
-			out.printf("%n");
 		}
 		out.flush();
 		System.out.println(sw.toString());
@@ -196,6 +200,7 @@ public class Benchmark {
 	 * @param args	0 .. UTF-8 file to read, 1 .. optional: stat file to write
 	 * @throws CharacterCodingException 
 	 */
+	@SuppressWarnings("boxing")
 	public static void main(String[] args) throws CharacterCodingException {
 		if (args.length < 1) {
 			usage();
@@ -227,32 +232,64 @@ public class Benchmark {
 		}
 		
 		double[][] stats = new double[charsets.length][txtBuffers.length];
-		String[] rowID = new String[charsets.length];
+		String[][] rowID = new String[2][charsets.length];
 		int cycles = 1 << 10;
 		double factor = 1000.0 / (1 << 10); // 1000 ms * cycles / Mchars
-		for (int id=0; id < rowID.length; id++) {
+		for (int id=0; id < rowID[0].length; id++) {
 			for (int i=0; i < txtBuffers.length; i++) {
 				// warmup
-				testDecoder(charsets[id], txtBuffers[i], resultBuffer, cycles);
+				testEncoder(charsets[id], txtBuffers[i], resultBuffer, cycles);
 			}
 			for (int i=0; i < txtBuffers.length; i++) {
 				// test
-				double t = testDecoder(charsets[id], txtBuffers[i], resultBuffer, cycles);
+				double t = testEncoder(charsets[id], txtBuffers[i], resultBuffer, cycles);
 				double rate = txtBuffers[i].limit() * factor / t;
 				if (Double.isInfinite(rate)) {
 					rate = 0;
 				}
 				stats[id][i] = rate;
-				rowID[id] = charsets[id].getClass().getName() + " - " 
+				rowID[0][id] = charsets[id].getClass().getName() + " - " 
 					+ charsets[id].displayName();
-				System.out.printf("%58s: %6s %.2f MiB/s%n", 
-					rowID[id], units[i], rate);
+				System.out.printf("e %58s: %6s %.2f MiB/s%n", 
+					rowID[0][id], units[i], rate);
 			}
 		}
-		printSummary(units, rowID, stats, args.length > 1 ? new File(args[1]) : null);
+
+		double[][] stats2 = new double[charsets.length][txtBuffers.length];
+		ByteBuffer[] bb = new ByteBuffer[txtBuffers.length];
+		CharBuffer result2buffer = CharBuffer.allocate(txtBuffers[txtBuffers.length-1].limit() + 3);
+		for (int id=0; id < rowID[1].length; id++) {
+			// create the buffers
+			CharsetEncoder encoder = charsets[id].newEncoder();
+			for (int k=0; k < txtBuffers.length; k++) {
+				txtBuffers[k].rewind();
+				bb[k] = encoder.encode(txtBuffers[k]);
+				encoder.reset();
+			}
+			for (int i=0; i < txtBuffers.length; i++) {
+				// warmup
+				testDecoder(charsets[id], bb[i], result2buffer, cycles);
+			}
+			for (int i=0; i < txtBuffers.length; i++) {
+				// test
+				double t = testDecoder(charsets[id], bb[i], 
+					result2buffer, cycles);
+				double rate = bb[i].limit() * factor / t;
+				if (Double.isInfinite(rate)) {
+					rate = 0;
+				}
+				stats2[id][i] = rate;
+				rowID[1][id] = charsets[id].getClass().getName() + " - " 
+					+ charsets[id].displayName();
+				System.out.printf("d %58s: %6s %.2f MiB/s%n", 
+					rowID[1][id], units[i], rate);
+			}
+		}
+		printSummary(units, rowID, stats, stats2, 
+			args.length > 1 ? new File(args[1]) : null);
 	}
 	
-	private static long testDecoder(Charset cs, CharBuffer in, ByteBuffer out,
+	private static long testEncoder(Charset cs, CharBuffer in, ByteBuffer out,
 		int cycles)
 	{
 		CharsetEncoder encoder = cs.newEncoder();
@@ -268,4 +305,19 @@ public class Benchmark {
 		return stop - start;
 	}
 
+	private static long testDecoder(Charset cs, ByteBuffer buf, CharBuffer out,
+		int cycles) 
+	{
+		CharsetDecoder decoder = cs.newDecoder();
+		long start = System.currentTimeMillis();
+		for (int i=0; i < cycles; i++) {
+			out.clear();
+			buf.rewind();
+			decoder.reset();
+			@SuppressWarnings("unused")
+			CoderResult result = decoder.decode(buf, out, true);
+		}
+		long stop = System.currentTimeMillis();
+		return stop - start;
+	}
 }
