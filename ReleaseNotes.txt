@@ -9,3 +9,5 @@ with the following minor modifications:
 - adaption to JUnit 4
 - pure Ant build instead of maven
 - provide version infos
+- improved encoding performance (~ 4-5x better)
+- implemented benchmarking of jutf7, Zimbra's UTF7 and charutils implementation  

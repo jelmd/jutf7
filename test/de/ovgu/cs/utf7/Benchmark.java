@@ -153,7 +153,7 @@ public class Benchmark {
 		for (int x = 0; x < 2; x++) {
 			double[][] cstats = x == 0 ? stats : stats2;
 			for (int i=0; i < rowID[x].length; i++) {
-				out.printf("%c %58s", x==0 ? 'e' : 'c', rowID[x][i]);
+				out.printf("%c %58s", x==0 ? 'e' : 'd', rowID[x][i]);
 				for (int k=0; k < units.length; k++) {
 					out.printf(" %6.2f", cstats[i][k]);
 				}
