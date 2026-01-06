@@ -380,7 +380,7 @@
 	-->
 	<target name="cp.lics">
 		<copy file="${license.file}" tofile="${dist.dir}/docs/LICENSE.txt" />
-		<copy file="${basedir}/ReleaseNotes.txt" todir="${dist.dir}/docs" />
+		<copy file="${basedir}/README.md" todir="${dist.dir}/docs" />
 	</target>
 
 	<target name="dist" depends="clean,jars,api,cp.lics">
